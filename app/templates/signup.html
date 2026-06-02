@@ -1,0 +1,431 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account — FASTag Portal{% endblock %}
+{% block meta_description %}Register for a FASTag account. Fill in personal details, complete KYC verification, and set up your account security.{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="auth-card auth-card--wide" role="region" aria-label="Account registration form">
+
+    <!-- Card Header -->
+    <div class="card-header">
+      <div class="card-icon" aria-hidden="true">📋</div>
+      <h1 class="card-title">Create Your Account</h1>
+      <p class="card-subtitle">Fill in the details below to register your FASTag account</p>
+    </div>
+
+    <form id="signup-form" action="{{ url_for('main.mpin_setup') }}" method="GET" novalidate>
+      <div class="step-cards">
+
+        <!-- ══════════════════════════════════════════
+             STEP 1 — Personal Information
+             ══════════════════════════════════════════ -->
+        <div class="step-card active" id="step-1" role="region" aria-labelledby="step-1-title">
+          <div class="step-card-header" role="button" aria-expanded="true" tabindex="0">
+            <div class="step-number" aria-hidden="true">1</div>
+            <span id="step-1-title" class="step-title">Personal Information</span>
+            <span class="step-check" aria-hidden="true">✓</span>
+            <span class="step-arrow" aria-hidden="true">▾</span>
+          </div>
+          <div class="step-card-body">
+
+            <!-- Full Name -->
+            <div class="form-group">
+              <label class="form-label" for="full-name">Full Name</label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="full-name"
+                  name="full_name"
+                  class="form-control no-icon"
+                  placeholder="Enter your full name (as per Aadhaar)"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+              <p class="field-helper">Name must match Aadhaar exactly</p>
+            </div>
+
+            <!-- Phone Number + OTP -->
+            <div class="form-group">
+              <label class="form-label" for="signup-phone">Phone Number</label>
+              <form id="otp-send-form" action="{{ url_for('main.send_otp') }}" method="POST" style="margin:0;">
+                <div class="input-with-btn">
+                  <input
+                    type="tel"
+                    id="signup-phone"
+                    name="phone"
+                    class="form-control"
+                    placeholder="Enter 10-digit mobile number"
+                    maxlength="10"
+                    inputmode="numeric"
+                    autocomplete="tel"
+                    required
+                  />
+                  <button type="submit" class="btn btn--outline-sm" id="send-otp-btn" aria-label="Send OTP to this phone number">
+                    Send OTP
+                  </button>
+                </div>
+              </form>
+              <p class="field-helper">This number will be used for OTP verification</p>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label" for="signup-email">Email Address</label>
+              <div class="input-wrapper">
+                <input
+                  type="email"
+                  id="signup-email"
+                  name="email"
+                  class="form-control no-icon"
+                  placeholder="Enter your email address"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+              <p class="field-helper">A confirmation link will be sent to this email</p>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="form-group">
+              <label class="form-label" for="dob">Date of Birth</label>
+              <div class="input-wrapper">
+                <input
+                  type="date"
+                  id="dob"
+                  name="dob"
+                  class="form-control no-icon"
+                  aria-describedby="dob-error"
+                  required
+                />
+              </div>
+              <span id="dob-error" class="error-msg" role="alert">You must be 18 or older to register</span>
+            </div>
+
+            <div class="step-actions">
+              <button type="button" class="btn btn--primary" style="width:auto;" data-next-step="1">
+                Continue &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             STEP 2 — Identity Verification
+             ══════════════════════════════════════════ -->
+        <div class="step-card" id="step-2" role="region" aria-labelledby="step-2-title">
+          <div class="step-card-header" role="button" aria-expanded="false" tabindex="0">
+            <div class="step-number" aria-hidden="true">2</div>
+            <span id="step-2-title" class="step-title">Identity Verification</span>
+            <span class="step-check" aria-hidden="true">✓</span>
+            <span class="step-arrow" aria-hidden="true">▾</span>
+          </div>
+          <div class="step-card-body">
+
+            <!-- Aadhaar -->
+            <div class="form-group">
+              <label class="form-label" for="aadhaar">
+                Aadhaar Number
+                <span class="info-icon-wrap" aria-label="Why do we collect this?">
+                  <span class="info-icon" aria-hidden="true">i</span>
+                  <span class="tooltip-box" role="tooltip">Why do we collect this?<br>Required for KYC as per RBI guidelines.</span>
+                </span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="aadhaar"
+                  name="aadhaar"
+                  class="form-control no-icon"
+                  placeholder="Enter 12-digit Aadhaar number"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  aria-describedby="aadhaar-helper"
+                  required
+                />
+              </div>
+              <p id="aadhaar-helper" class="field-helper">Your Aadhaar is used for KYC verification only</p>
+            </div>
+
+            <!-- PAN (optional) -->
+            <div class="form-group">
+              <label class="form-label" for="pan">
+                PAN Number
+                <span class="optional-tag">(optional)</span>
+                <span class="info-icon-wrap" aria-label="Why do we collect this?">
+                  <span class="info-icon" aria-hidden="true">i</span>
+                  <span class="tooltip-box" role="tooltip">Why do we collect this?<br>Needed for wallets above ₹10,000.</span>
+                </span>
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="pan"
+                  name="pan"
+                  class="form-control"
+                  placeholder="Enter 10-character PAN"
+                  maxlength="10"
+                  autocomplete="off"
+                  aria-describedby="pan-helper"
+                />
+                <span id="pan-tick" class="input-tick" aria-label="PAN number valid">✓</span>
+              </div>
+              <p id="pan-helper" class="field-helper">Required for wallets above ₹10,000</p>
+            </div>
+
+            <div class="step-actions">
+              <button type="button" class="btn btn--primary" style="width:auto;" data-next-step="2">
+                Continue &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             STEP 3 — Vehicle Details
+             ══════════════════════════════════════════ -->
+        <div class="step-card" id="step-3" role="region" aria-labelledby="step-3-title">
+          <div class="step-card-header" role="button" aria-expanded="false" tabindex="0">
+            <div class="step-number" aria-hidden="true">3</div>
+            <span id="step-3-title" class="step-title">Vehicle Details</span>
+            <span class="step-check" aria-hidden="true">✓</span>
+            <span class="step-arrow" aria-hidden="true">▾</span>
+          </div>
+          <div class="step-card-body">
+
+            <!-- Vehicle Registration -->
+            <div class="form-group">
+              <label class="form-label" for="vehicle-reg">Vehicle Registration Number</label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="vehicle-reg"
+                  name="vehicle_reg"
+                  class="form-control"
+                  placeholder="e.g. TN01AB1234"
+                  maxlength="10"
+                  autocomplete="off"
+                  required
+                />
+                <span id="vrn-tick" class="input-tick" aria-label="Registration number valid">✓</span>
+              </div>
+            </div>
+
+            <!-- Vehicle Type -->
+            <div class="form-group">
+              <label class="form-label" for="vehicle-type">Vehicle Type</label>
+              <div class="input-wrapper">
+                <select id="vehicle-type" name="vehicle_type" class="form-control" required>
+                  <option value="">— Select vehicle type —</option>
+                  <option value="two-wheeler">Two Wheeler</option>
+                  <option value="four-wheeler">Four Wheeler</option>
+                  <option value="commercial">Commercial Vehicle</option>
+                  <option value="heavy">Heavy Vehicle</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Permit / RC Number (hidden initially) -->
+            <div class="form-group hidden" id="permit-group">
+              <label class="form-label" for="permit-rc">Permit / RC Number</label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="permit-rc"
+                  name="permit_rc"
+                  class="form-control no-icon"
+                  placeholder="Enter permit or RC number"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <div class="step-actions">
+              <button type="button" class="btn btn--primary" style="width:auto;" data-next-step="3">
+                Continue &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+             STEP 4 — Account Security
+             ══════════════════════════════════════════ -->
+        <div class="step-card" id="step-4" role="region" aria-labelledby="step-4-title">
+          <div class="step-card-header" role="button" aria-expanded="false" tabindex="0">
+            <div class="step-number" aria-hidden="true">4</div>
+            <span id="step-4-title" class="step-title">Account Security</span>
+            <span class="step-check" aria-hidden="true">✓</span>
+            <span class="step-arrow" aria-hidden="true">▾</span>
+          </div>
+          <div class="step-card-body">
+
+            <!-- Create Password -->
+            <div class="form-group">
+              <label class="form-label" for="create-password">Create Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="create-password"
+                  name="password"
+                  class="form-control"
+                  placeholder="Minimum 8 characters"
+                  autocomplete="new-password"
+                  aria-describedby="strength-label-signup"
+                  required
+                />
+                <button type="button" id="create-pw-toggle" class="input-addon" aria-label="Show password" title="Toggle password visibility">&#128065;</button>
+              </div>
+
+              <!-- Strength Bar -->
+              <div id="strength-bar-signup" class="strength-bar" aria-hidden="true">
+                <div class="strength-segment"></div>
+                <div class="strength-segment"></div>
+                <div class="strength-segment"></div>
+                <div class="strength-segment"></div>
+                <div class="strength-segment"></div>
+              </div>
+              <div id="strength-label-signup" class="strength-label" aria-live="polite"></div>
+
+              <!-- Checklist -->
+              <ul id="pw-checklist-signup" class="pw-checklist" aria-label="Password requirements">
+                <li class="pw-check-item" id="check-length">At least 8 characters</li>
+                <li class="pw-check-item" id="check-upper">One uppercase letter (A–Z)</li>
+                <li class="pw-check-item" id="check-number">One number (0–9)</li>
+                <li class="pw-check-item" id="check-special">One special character (!@#$%^&amp;*)</li>
+              </ul>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label class="form-label" for="confirm-password">Confirm Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  id="confirm-password"
+                  name="confirm_password"
+                  class="form-control"
+                  placeholder="Re-enter your password"
+                  autocomplete="new-password"
+                  aria-describedby="confirm-pw-error"
+                  required
+                />
+                <button type="button" id="confirm-pw-toggle" class="input-addon" aria-label="Show confirm password" title="Toggle password visibility">&#128065;</button>
+              </div>
+              <span id="confirm-pw-error" class="error-msg" role="alert">Passwords do not match</span>
+            </div>
+
+            <!-- Checkboxes -->
+            <div class="form-group" style="margin-top:24px;">
+              <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; font-size:13px; color:#3D4455; line-height:1.5;">
+                <input type="checkbox" id="cb-accuracy" name="cb_accuracy" style="margin-top:2px; width:16px; height:16px; accent-color:#FF6B00; flex-shrink:0;" />
+                <span>I confirm that all details provided are accurate and match my official documents.</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; font-size:13px; color:#3D4455; line-height:1.5;">
+                <input type="checkbox" id="cb-terms" name="cb_terms" style="margin-top:2px; width:16px; height:16px; accent-color:#FF6B00; flex-shrink:0;" />
+                <span>
+                  I agree to the
+                  <a href="#" id="terms-link" style="font-weight:600;">Terms &amp; Conditions</a>
+                  and
+                  <a href="#" id="privacy-link" style="font-weight:600;">Privacy Policy</a>
+                  of NHAI FASTag Services.
+                </span>
+              </label>
+            </div>
+
+            <!-- Create Account Button -->
+            <button
+              type="submit"
+              id="create-account-btn"
+              class="btn btn--primary"
+              disabled
+              aria-describedby="confirm-pw-error"
+            >
+              Create Account
+            </button>
+
+          </div>
+        </div>
+        <!-- end step 4 -->
+
+      </div><!-- end .step-cards -->
+    </form>
+
+    <p class="switch-prompt">
+      Already have an account?
+      <a href="{{ url_for('main.login') }}">Sign in</a>
+    </p>
+
+  </div><!-- end .auth-card -->
+</div>
+
+<!-- ══════════════════════════════════════════
+     Terms & Conditions Modal
+     ══════════════════════════════════════════ -->
+<div id="terms-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="terms-modal-title">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2 id="terms-modal-title" class="modal-title">Terms &amp; Conditions</h2>
+      <button type="button" id="terms-modal-close" class="modal-close" aria-label="Close Terms and Conditions">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3>1. Acceptance of Terms</h3>
+      <p>By registering for a FASTag account through NHAI's FASTag Portal, you agree to be bound by these Terms &amp; Conditions. If you do not agree to these terms, please do not use this service.</p>
+      <h3>2. Eligibility</h3>
+      <p>You must be at least 18 years of age and a resident of India to register for a FASTag account. You must possess a valid vehicle registration certificate and a valid KYC document as prescribed by RBI guidelines.</p>
+      <h3>3. FASTag Account</h3>
+      <p>Each vehicle is permitted to have only one FASTag linked to it. You are responsible for maintaining the confidentiality of your account credentials, MPIN, and OTP. NHAI shall not be liable for any loss arising from unauthorized access due to your negligence.</p>
+      <h3>4. Recharge and Balance</h3>
+      <p>Your FASTag wallet is a semi-closed prepaid payment instrument regulated by the Reserve Bank of India. Minimum and maximum balance limits are as specified by NPCI from time to time. Toll deductions are automated at toll plazas and are irrevocable once processed.</p>
+      <h3>5. KYC Requirements</h3>
+      <p>Full KYC is mandatory for wallets above ₹10,000. You consent to the collection, verification, and storage of your Aadhaar and PAN information solely for the purpose of KYC verification as mandated by the Prevention of Money Laundering Act (PMLA).</p>
+      <h3>6. Dispute Resolution</h3>
+      <p>All disputes arising out of or in connection with this agreement shall first be attempted to be resolved through the NHAI Grievance Redressal mechanism. Unresolved disputes shall be subject to the jurisdiction of courts in New Delhi.</p>
+      <h3>7. Modification of Terms</h3>
+      <p>NHAI reserves the right to modify these terms at any time. Continued use of the portal after notification of changes constitutes acceptance of the new terms.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn--primary" id="terms-modal-close-footer" style="width:auto;" onclick="document.getElementById('terms-modal').classList.remove('open'); document.body.style.overflow='';">I Understand</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     Privacy Policy Modal
+     ══════════════════════════════════════════ -->
+<div id="privacy-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h2 id="privacy-modal-title" class="modal-title">Privacy Policy</h2>
+      <button type="button" id="privacy-modal-close" class="modal-close" aria-label="Close Privacy Policy">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3>1. Information We Collect</h3>
+      <p>We collect personal information including your full name, mobile number, email address, date of birth, Aadhaar number, PAN number, and vehicle registration details. This information is collected solely for the purpose of providing FASTag services.</p>
+      <h3>2. How We Use Your Information</h3>
+      <p>Your information is used for account creation and management, KYC verification as mandated by RBI, processing toll payments, sending transactional notifications, and compliance with legal and regulatory requirements.</p>
+      <h3>3. Data Sharing</h3>
+      <p>We do not sell your personal information. We share data only with NPCI, UIDAI (for Aadhaar verification), toll plaza operators for transaction processing, and regulatory authorities as required by law.</p>
+      <h3>4. Data Security</h3>
+      <p>We employ industry-standard encryption (TLS 1.3) for data in transit and AES-256 for data at rest. Your Aadhaar data is handled in compliance with the Aadhaar (Data Security) Regulations, 2016.</p>
+      <h3>5. Your Rights</h3>
+      <p>You have the right to access, correct, or request deletion of your personal data, subject to applicable laws. To exercise these rights, contact our Grievance Officer at grievance@fastag.nhai.gov.in.</p>
+      <h3>6. Cookie Policy</h3>
+      <p>This portal uses essential session cookies for authentication and security. No third-party tracking or advertising cookies are used.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn--primary" style="width:auto;" onclick="document.getElementById('privacy-modal').classList.remove('open'); document.body.style.overflow='';">I Understand</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', initSignup);
+</script>
+{% endblock %}

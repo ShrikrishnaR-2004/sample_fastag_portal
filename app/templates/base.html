@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="{% block meta_description %}FASTag Portal — Manage your FASTag account, recharge, and track your vehicle toll payments.{% endblock %}" />
+  <title>{% block title %}FASTag Portal{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Site Header ── -->
+  <header class="site-header" role="banner">
+    <a href="{{ url_for('main.login') }}" class="nav-brand" aria-label="FASTag Portal home">
+      <span class="fastag-badge" aria-hidden="true">FASTag</span>
+      <div>
+        <div class="nav-brand-text">FASTag Portal</div>
+        <div class="nav-brand-sub">NHAI · Powered by NPCI</div>
+      </div>
+    </a>
+    <nav class="header-right" aria-label="Header navigation">
+      <a href="#" class="header-help">Help &amp; Support</a>
+    </nav>
+  </header>
+
+  <!-- ── Flash Messages ── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="page-wrapper" style="padding-bottom: 0; padding-top: 16px;">
+        {% for category, message in messages %}
+          <div class="flash-banner flash-banner--{{ category }}" role="alert">
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ── Page Content ── -->
+  <main id="main-content" role="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer" role="contentinfo">
+    <p>
+      &copy; {{ 2024 }} National Highways Authority of India &middot;
+      <a href="#">Terms &amp; Conditions</a> &middot;
+      <a href="#">Privacy Policy</a> &middot;
+      <a href="#">Grievance Redressal</a>
+    </p>
+    <p style="margin-top:4px;">Regulated by RBI &middot; Authorised by NPCI</p>
+  </footer>
+
+  <!-- ── JS ── -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

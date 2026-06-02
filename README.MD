@@ -105,10 +105,17 @@ Section heading: Account Security
 Field 11 label: Create Password (mandatory)
 Field 11 placeholder: Minimum 8 characters
 Helper text: Must include uppercase, number, and special character
+Section 4 — Account Security
+Field 9 label: Create Password
+Field 9 placeholder: Minimum 8 characters
+Helper text: Use uppercase, numbers, and special characters(make it as a checklist)
 Password strength labels: Too short · Weak · Fair · Good · Strong
 Field 12 label: Confirm Password (mandatory)
 Field 12 placeholder: Re-enter your password
 Inline error: Passwords do not match
+Add: MPIN setup — after creating the account, prompt users to set a 4–6 digit MPIN for quicker future logins.
+Tune: The T&C and Privacy Policy links should open in a modal/bottom sheet, not a new tab — especially on mobile, leaving the sign-up form to read T&C in a new tab causes drop-off.
+
 
 Checkbox 1: I confirm that the details provided are true and match my official documents.
 Checkbox 2: I agree to the Terms & Conditions and Privacy Policy of the FASTag portal.
@@ -144,12 +151,15 @@ Footer link: ← Back to Login
 Stage 2 — Email Sent Confirmation
 Heading: Check Your Inbox
 Subheading: A password reset link has been sent to ra***@gmail.com**
+
+OTP verification screen — triggered after phone number entry in sign-up. Needs: 6-digit input, resend with cooldown, wrong OTP error state.
+
 Info message: The link will expire in 30 minutes. If you don't see it, check your spam folder.
 Resend prompt: Didn't receive the email? Resend link
 Cooldown text: Resend available in 00:59
 Footer link: ← Back to Login
 
-Stage 3 — Reset Password (from email link)
+Stage 3 — Reset Password (from email link/SMS OTP)
 Heading: Set New Password
 Subheading: Choose a strong password for your account
 Field 1 label: New Password
@@ -160,7 +170,11 @@ Field 2 placeholder: Re-enter new password
 Inline error: Passwords do not match
 Primary button: Update Password
 
+Add: Password reuse check — on Stage 3 (reset), block the user from reusing their last 2–3 passwords and show a clear error if they try.
+
+
+
 Stage 4 — Success
 Heading: Password Updated!
 Subheading: Your password has been reset successfully. You can now sign in with your new password.
-Primary button: Go to Login
+Primary button: Go to Login 

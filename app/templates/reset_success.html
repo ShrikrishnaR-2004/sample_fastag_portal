@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Password Updated — FASTag Portal{% endblock %}
+{% block meta_description %}Your FASTag account password has been reset successfully. Sign in with your new password.{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="auth-card" style="text-align:center;" role="region" aria-label="Password reset success">
+
+    <!-- CSS-drawn success checkmark -->
+    <div class="success-icon" role="img" aria-label="Success checkmark"></div>
+
+    <h1 class="card-title">Password Updated!</h1>
+    <p class="card-subtitle" style="margin-top:8px; margin-bottom:28px;">
+      Your password has been reset successfully. You can now sign in with your new password.
+    </p>
+
+    <a href="{{ url_for('main.login') }}" class="btn btn--primary" style="text-decoration:none;">
+      Go to Login
+    </a>
+
+    <p id="redirect-countdown" class="redirect-countdown" aria-live="polite"></p>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', initResetSuccess);
+</script>
+{% endblock %}

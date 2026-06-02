@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Set Up MPIN — FASTag Portal{% endblock %}
+{% block meta_description %}Create a 4–6 digit MPIN for quick and secure access to your FASTag account.{% endblock %}
+
+{% block content %}
+<div class="page-wrapper">
+  <div class="auth-card" role="region" aria-label="MPIN setup form">
+
+    <div class="card-header">
+      <div class="card-icon" aria-hidden="true">🛡️</div>
+      <h1 class="card-title">Set Up Your MPIN</h1>
+      <p class="card-subtitle">Create a 4–6 digit PIN for quick access to your FASTag account</p>
+    </div>
+
+    <form id="mpin-form" action="{{ url_for('main.login') }}" method="GET" novalidate>
+
+      <!-- Create MPIN -->
+      <div class="mpin-section">
+        <p class="mpin-label">Create MPIN</p>
+        <div class="mpin-group mpin-create" role="group" aria-label="Create MPIN — 6 digit fields (4–6 digits required)">
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="MPIN digit 1" id="mpin-1" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="MPIN digit 2" id="mpin-2" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="MPIN digit 3" id="mpin-3" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="MPIN digit 4" id="mpin-4" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="MPIN digit 5 (optional)" id="mpin-5" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="MPIN digit 6 (optional)" id="mpin-6" autocomplete="off" />
+        </div>
+        <p class="mpin-helper">Enter 4–6 digits</p>
+      </div>
+
+      <!-- Confirm MPIN -->
+      <div class="mpin-section">
+        <p class="mpin-label">Confirm MPIN</p>
+        <div class="mpin-group mpin-confirm" role="group" aria-label="Confirm MPIN — 6 digit fields">
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Confirm MPIN digit 1" id="mpin-c1" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Confirm MPIN digit 2" id="mpin-c2" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Confirm MPIN digit 3" id="mpin-c3" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Confirm MPIN digit 4" id="mpin-c4" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Confirm MPIN digit 5 (optional)" id="mpin-c5" autocomplete="off" />
+          <input type="password" class="mpin-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Confirm MPIN digit 6 (optional)" id="mpin-c6" autocomplete="off" />
+        </div>
+        <span id="mpin-error" class="error-msg" style="display:block; text-align:center; margin-top:8px;" role="alert"></span>
+      </div>
+
+      <p class="mpin-helper" style="margin-bottom:20px;">
+        🔒 Never share your MPIN with anyone
+      </p>
+
+      <button type="submit" id="set-mpin-btn" class="btn btn--primary">
+        Set MPIN
+      </button>
+
+    </form>
+
+    <a href="{{ url_for('main.login') }}" class="skip-link">Skip for now</a>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', initMpinSetup);
+</script>
+{% endblock %}
