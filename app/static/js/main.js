@@ -1,63 +1,27 @@
-/**
- * FASTag Portal — main.js
- * All interactive behaviours for every page.
- * No inline scripts; pages call init functions at the bottom of their body.
- */
 
-/* =========================================================
-   UTILITY HELPERS
-   ========================================================= */
 
-/**
- * Add/remove a class based on a boolean condition.
- * @param {Element} el
- * @param {string} cls
- * @param {boolean} condition
- */
 function toggleClass(el, cls, condition) {
   if (!el) return;
   if (condition) el.classList.add(cls);
   else el.classList.remove(cls);
 }
 
-/**
- * Show an element (removes 'hidden', adds 'visible' if needed).
- * @param {Element} el
- */
 function show(el) {
   if (!el) return;
   el.classList.remove('hidden');
 }
 
-/**
- * Hide an element.
- * @param {Element} el
- */
 function hide(el) {
   if (!el) return;
   el.classList.add('hidden');
 }
 
-/**
- * Format seconds as MM:SS.
- * @param {number} secs
- * @returns {string}
- */
 function formatTime(secs) {
   const m = Math.floor(secs / 60).toString().padStart(2, '0');
   const s = (secs % 60).toString().padStart(2, '0');
   return `${m}:${s}`;
 }
 
-/* =========================================================
-   PASSWORD VISIBILITY TOGGLE
-   ========================================================= */
-
-/**
- * Wire up a show/hide toggle for a password input.
- * @param {string} inputId
- * @param {string} toggleId
- */
 function initPasswordToggle(inputId, toggleId) {
   const input = document.getElementById(inputId);
   const toggle = document.getElementById(toggleId);
@@ -71,14 +35,6 @@ function initPasswordToggle(inputId, toggleId) {
   });
 }
 
-/* =========================================================
-   MOBILE NUMBER AUTO-FORMAT
-   ========================================================= */
-
-/**
- * Auto-insert a space after the 5th digit of a mobile number field.
- * @param {string} inputId
- */
 function initMobileFormat(inputId) {
   const input = document.getElementById(inputId);
   if (!input) return;
@@ -92,21 +48,15 @@ function initMobileFormat(inputId) {
   });
 }
 
-/* =========================================================
-   LOGIN PAGE
-   ========================================================= */
-
 function initLogin() {
-  // Mobile format
+
   initMobileFormat('mobile');
 
-  // Password toggle
   initPasswordToggle('password', 'pw-toggle');
 
-  // Attempt counter / lockout
   let attempts = 0;
   const MAX_ATTEMPTS = 3;
-  const LOCKOUT_SECONDS = 300; // 5 minutes
+  const LOCKOUT_SECONDS = 300; 
 
   const form = document.getElementById('login-form');
   const mobileInput = document.getElementById('mobile');
@@ -130,7 +80,6 @@ function initLogin() {
     msgEl.classList.remove('visible');
   }
 
-  // Clear errors on input
   if (mobileInput) {
     mobileInput.addEventListener('input', () => clearFieldError(mobileInput, mobileErr));
   }
@@ -162,7 +111,6 @@ function initLogin() {
 
       if (signInBtn.disabled) return;
 
-      // Simulate validation: show errors for demo
       let hasError = false;
       const mobileVal = (mobileInput ? mobileInput.value.replace(/\s/g, '') : '');
       const passwordVal = (passwordInput ? passwordInput.value : '');
@@ -186,17 +134,13 @@ function initLogin() {
           startLockout();
         }
       }
-      // On success (all valid), allow normal form submission
+
     });
   }
 }
 
-/* =========================================================
-   SIGNUP PAGE — STEP CARDS
-   ========================================================= */
-
 function initSignup() {
-  // Step navigation
+
   const stepCards = document.querySelectorAll('.step-card');
 
   function activateStep(index) {
@@ -216,14 +160,13 @@ function initSignup() {
     const header = card.querySelector('.step-card-header');
     if (header) {
       header.addEventListener('click', () => {
-        // Only allow clicking if already completed or active
+
         if (card.classList.contains('completed') || card.classList.contains('active')) {
           activateStep(i);
         }
       });
     }
 
-    // Next button inside each step
     const nextBtn = card.querySelector('[data-next-step]');
     if (nextBtn) {
       nextBtn.addEventListener('click', () => {
@@ -236,17 +179,13 @@ function initSignup() {
     }
   });
 
-  // Activate first step
   activateStep(0);
 
-  // Password toggles for signup
   initPasswordToggle('create-password', 'create-pw-toggle');
   initPasswordToggle('confirm-password', 'confirm-pw-toggle');
 
-  // Mobile format in signup
   initMobileFormat('signup-phone');
 
-  // Date of Birth age gate
   const dobInput = document.getElementById('dob');
   const dobError = document.getElementById('dob-error');
   if (dobInput && dobError) {
@@ -266,28 +205,27 @@ function initSignup() {
     });
   }
 
-  // Aadhaar masking + formatting
   const aadhaarInput = document.getElementById('aadhaar');
   if (aadhaarInput) {
     aadhaarInput.addEventListener('input', (e) => {
-      // Remove non-digits, limit to 12
+
       let digits = aadhaarInput.value.replace(/\D/g, '').substring(0, 12);
-      // Mask all but last 4 for display
+
       let masked = '';
       for (let i = 0; i < digits.length; i++) {
         if (i > 0 && i % 4 === 0) masked += ' ';
         masked += (i < digits.length - 4) ? '•' : digits[i];
       }
-      // Store raw digits in data attribute
+
       aadhaarInput.dataset.rawValue = digits;
       aadhaarInput.value = masked;
     });
-    // Prevent cursor confusion — use keydown to handle digit keys
+
     aadhaarInput.addEventListener('keydown', (e) => {
       if (e.key === 'Backspace') {
         const raw = (aadhaarInput.dataset.rawValue || '');
         aadhaarInput.dataset.rawValue = raw.slice(0, -1);
-        // Trigger input event to reformat
+
         aadhaarInput.dispatchEvent(new Event('input'));
         e.preventDefault();
       } else if (/^\d$/.test(e.key)) {
@@ -301,7 +239,6 @@ function initSignup() {
     });
   }
 
-  // PAN validation
   const panInput = document.getElementById('pan');
   const panTick = document.getElementById('pan-tick');
   const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
@@ -315,7 +252,6 @@ function initSignup() {
     });
   }
 
-  // Vehicle registration number
   const vrn = document.getElementById('vehicle-reg');
   const vrnTick = document.getElementById('vrn-tick');
   const vrnPattern = /^[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}$/;
@@ -329,7 +265,6 @@ function initSignup() {
     });
   }
 
-  // Vehicle type — reveal permit field
   const vehicleTypeSelect = document.getElementById('vehicle-type');
   const permitGroup = document.getElementById('permit-group');
   if (vehicleTypeSelect && permitGroup) {
@@ -340,10 +275,8 @@ function initSignup() {
     });
   }
 
-  // Password strength
   initPasswordStrength('create-password', 'strength-bar-signup', 'strength-label-signup', 'pw-checklist-signup');
 
-  // Confirm password mismatch
   const confirmPw = document.getElementById('confirm-password');
   const confirmErr = document.getElementById('confirm-pw-error');
   const createPw = document.getElementById('create-password');
@@ -362,11 +295,9 @@ function initSignup() {
     });
   }
 
-  // Terms modal
   initModal('terms-link', 'terms-modal', 'terms-modal-close');
   initModal('privacy-link', 'privacy-modal', 'privacy-modal-close');
 
-  // Create Account button — enable only when checkboxes checked + passwords match
   const cb1 = document.getElementById('cb-accuracy');
   const cb2 = document.getElementById('cb-terms');
   const createBtn = document.getElementById('create-account-btn');
@@ -385,16 +316,6 @@ function initSignup() {
   updateCreateBtn();
 }
 
-/* =========================================================
-   PASSWORD STRENGTH METER
-   ========================================================= */
-
-/**
- * @param {string} inputId
- * @param {string} barId - id of the .strength-bar container
- * @param {string} labelId - id of the .strength-label span
- * @param {string} checklistId - id of the .pw-checklist ul
- */
 function initPasswordStrength(inputId, barId, labelId, checklistId) {
   const input = document.getElementById(inputId);
   const bar = document.getElementById(barId);
@@ -437,7 +358,6 @@ function initPasswordStrength(inputId, barId, labelId, checklistId) {
     const val = input.value;
     const level = getLevel(val);
 
-    // Remove all level classes
     levels.forEach(cls => { if (cls) bar.classList.remove(cls); });
 
     if (level > 0) {
@@ -452,31 +372,25 @@ function initPasswordStrength(inputId, barId, labelId, checklistId) {
   });
 }
 
-/* =========================================================
-   OTP VERIFY PAGE
-   ========================================================= */
-
 function initOtpVerify() {
   const inputs = document.querySelectorAll('.otp-input');
   const verifyBtn = document.getElementById('verify-otp-btn');
   const otpError = document.getElementById('otp-error');
   const form = document.getElementById('otp-form');
 
-  // Auto-focus management
   inputs.forEach((input, index) => {
     input.addEventListener('input', (e) => {
-      // Only allow digits
+
       input.value = input.value.replace(/\D/g, '').substring(0, 1);
 
       if (input.value && index < inputs.length - 1) {
         inputs[index + 1].focus();
       }
 
-      // Auto-submit when all filled
       const allFilled = Array.from(inputs).every(i => i.value.length === 1);
       if (allFilled && verifyBtn) {
         verifyBtn.disabled = false;
-        // Simulate auto-submit after short delay
+
         setTimeout(() => {
           handleOtpVerify();
         }, 200);
@@ -494,7 +408,6 @@ function initOtpVerify() {
       if (e.key === 'ArrowRight' && index < inputs.length - 1) inputs[index + 1].focus();
     });
 
-    // Allow paste of 6-digit OTP
     input.addEventListener('paste', (e) => {
       e.preventDefault();
       const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
@@ -506,7 +419,6 @@ function initOtpVerify() {
     });
   });
 
-  // Focus first input on load
   if (inputs[0]) inputs[0].focus();
 
   let otpAttempts = 0;
@@ -514,8 +426,7 @@ function initOtpVerify() {
   function handleOtpVerify() {
     const otp = Array.from(inputs).map(i => i.value).join('');
     if (otp.length === 6) {
-      // Simulate: any 6-digit OTP is "correct" for demo
-      // On success redirect to signup
+
       window.location.href = '/signup';
     } else {
       otpAttempts += 1;
@@ -535,18 +446,11 @@ function initOtpVerify() {
     });
   }
 
-  // Resend OTP countdown
   const resendBtn = document.getElementById('resend-otp-btn');
   const resendCountdown = document.getElementById('resend-countdown');
   startResendCountdown(resendBtn, resendCountdown, 60);
 }
 
-/**
- * Generic resend countdown.
- * @param {Element} btn - the resend button
- * @param {Element} countdownEl - element showing countdown text
- * @param {number} seconds - countdown duration
- */
 function startResendCountdown(btn, countdownEl, seconds) {
   if (!btn || !countdownEl) return;
   btn.disabled = true;
@@ -565,10 +469,6 @@ function startResendCountdown(btn, countdownEl, seconds) {
     }
   }, 1000);
 }
-
-/* =========================================================
-   FORGOT PASSWORD PAGE
-   ========================================================= */
 
 function initForgotPassword() {
   const stage1 = document.getElementById('fp-stage-1');
@@ -614,16 +514,11 @@ function initForgotPassword() {
   }
 }
 
-/* =========================================================
-   RESET PASSWORD PAGE
-   ========================================================= */
-
 function initResetPassword() {
   initPasswordToggle('new-password', 'new-pw-toggle');
   initPasswordToggle('confirm-new-password', 'confirm-new-pw-toggle');
   initPasswordStrength('new-password', 'strength-bar-reset', 'strength-label-reset', 'pw-checklist-reset');
 
-  // Confirm password mismatch
   const newPw = document.getElementById('new-password');
   const confirmPw = document.getElementById('confirm-new-password');
   const confirmErr = document.getElementById('reset-confirm-error');
@@ -643,7 +538,6 @@ function initResetPassword() {
     });
   }
 
-  // Password reuse check (hardcoded demo passwords)
   const OLD_PASSWORDS = ['Password1!', 'OldPass@2023', 'Fastag#123'];
   const reuseWarning = document.getElementById('pw-reuse-warning');
 
@@ -663,10 +557,6 @@ function initResetPassword() {
   }
 }
 
-/* =========================================================
-   RESET SUCCESS PAGE
-   ========================================================= */
-
 function initResetSuccess() {
   const countdownEl = document.getElementById('redirect-countdown');
   let remaining = 5;
@@ -682,10 +572,6 @@ function initResetSuccess() {
     }
   }, 1000);
 }
-
-/* =========================================================
-   MPIN SETUP PAGE
-   ========================================================= */
 
 function initMpinSetup() {
   const mpinInputs = document.querySelectorAll('.mpin-create .mpin-input');
@@ -734,22 +620,12 @@ function initMpinSetup() {
       }
 
       mpinError.classList.remove('visible');
-      // Success — redirect to login
+
       window.location.href = '/login';
     });
   }
 }
 
-/* =========================================================
-   MODAL HELPER
-   ========================================================= */
-
-/**
- * Wire a link to open a modal, and wire the close button.
- * @param {string} triggerLinkId
- * @param {string} modalId
- * @param {string} closeId
- */
 function initModal(triggerLinkId, modalId, closeId) {
   const trigger = document.getElementById(triggerLinkId);
   const modal = document.getElementById(modalId);
@@ -761,7 +637,7 @@ function initModal(triggerLinkId, modalId, closeId) {
     e.preventDefault();
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
-    // Focus close button for accessibility
+
     if (closeBtn) setTimeout(() => closeBtn.focus(), 50);
   }
 
@@ -774,12 +650,10 @@ function initModal(triggerLinkId, modalId, closeId) {
   trigger.addEventListener('click', openModal);
   if (closeBtn) closeBtn.addEventListener('click', closeModal);
 
-  // Close on overlay click
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
   });
 
-  // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
   });

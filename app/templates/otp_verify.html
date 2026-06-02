@@ -7,7 +7,6 @@
 <div class="page-wrapper">
   <div class="auth-card" role="region" aria-label="OTP verification form">
 
-    <!-- Card Header -->
     <div class="card-header">
       <div class="card-icon" aria-hidden="true">📱</div>
       <h1 class="card-title">Verify Your Number</h1>
@@ -19,8 +18,14 @@
 
     <p class="otp-hint" aria-live="polite">Enter the code below</p>
 
-    <form id="otp-form" action="{{ url_for('main.otp_verify') }}" method="GET" novalidate>
-      <!-- 6-digit OTP boxes -->
+    <form id="otp-form" action="{{ url_for('main.otp_verify') }}" method="POST" novalidate>
+
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <input type="hidden" id="otp-combined" name="otp_combined" value="" />
+
+      <input type="hidden" name="phone" value="{{ phone }}" />
+
       <div class="otp-group" role="group" aria-label="OTP input — 6 individual digit fields">
         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="OTP digit 1" id="otp-1" />
         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 2" id="otp-2" />
@@ -30,10 +35,8 @@
         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 6" id="otp-6" />
       </div>
 
-      <!-- Error message -->
       <span id="otp-error" class="error-msg" role="alert" style="display:block; text-align:center;"></span>
 
-      <!-- Resend section -->
       <div class="resend-row" style="justify-content:center; margin-top:16px;">
         <span>Didn't receive it?</span>
         <button
@@ -46,14 +49,12 @@
       </div>
       <div id="resend-countdown" class="field-helper" style="text-align:center;" aria-live="polite"></div>
 
-      <!-- Verify Button -->
       <button type="submit" id="verify-otp-btn" class="btn btn--primary" style="margin-top:20px;">
         Verify OTP
       </button>
 
     </form>
 
-    <!-- Footer links -->
     <p class="switch-prompt" style="margin-top:16px;">
       <a href="{{ url_for('main.signup') }}">&larr; Change number</a>
     </p>
@@ -64,6 +65,40 @@
 
 {% block scripts %}
 <script>
-  document.addEventListener('DOMContentLoaded', initOtpVerify);
+  document.addEventListener('DOMContentLoaded', function() {
+    initOtpVerify();
+
+    // Before submit, collect all digit inputs into the combined hidden field
+    const form = document.getElementById('otp-form');
+    if (form) {
+      form.addEventListener('submit', function() {
+        const digits = Array.from(document.querySelectorAll('.otp-input')).map(i => i.value);
+        document.getElementById('otp-combined').value = digits.join('');
+      });
+    }
+
+    // Resend OTP button — re-submits the phone to send-otp route
+    const resendBtn = document.getElementById('resend-otp-btn');
+    if (resendBtn) {
+      resendBtn.addEventListener('click', function() {
+        const phone = document.querySelector('input[name="phone"]').value;
+        const f = document.createElement('form');
+        f.method = 'POST';
+        f.action = '{{ url_for("main.send_otp") }}';
+        const csrf = document.createElement('input');
+        csrf.type  = 'hidden';
+        csrf.name  = 'csrf_token';
+        csrf.value = '{{ csrf_token() }}';
+        const ph = document.createElement('input');
+        ph.type  = 'hidden';
+        ph.name  = 'phone';
+        ph.value = phone;
+        f.appendChild(csrf);
+        f.appendChild(ph);
+        document.body.appendChild(f);
+        f.submit();
+      });
+    }
+  });
 </script>
 {% endblock %}

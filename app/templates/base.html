@@ -9,7 +9,6 @@
 </head>
 <body>
 
-  <!-- ── Site Header ── -->
   <header class="site-header" role="banner">
     <a href="{{ url_for('main.login') }}" class="nav-brand" aria-label="FASTag Portal home">
       <span class="fastag-badge" aria-hidden="true">FASTag</span>
@@ -23,7 +22,6 @@
     </nav>
   </header>
 
-  <!-- ── Flash Messages ── -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <div class="page-wrapper" style="padding-bottom: 0; padding-top: 16px;">
@@ -36,23 +34,10 @@
     {% endif %}
   {% endwith %}
 
-  <!-- ── Page Content ── -->
   <main id="main-content" role="main">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- ── Footer ── -->
-  <footer class="site-footer" role="contentinfo">
-    <p>
-      &copy; {{ 2024 }} National Highways Authority of India &middot;
-      <a href="#">Terms &amp; Conditions</a> &middot;
-      <a href="#">Privacy Policy</a> &middot;
-      <a href="#">Grievance Redressal</a>
-    </p>
-    <p style="margin-top:4px;">Regulated by RBI &middot; Authorised by NPCI</p>
-  </footer>
-
-  <!-- ── JS ── -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block scripts %}{% endblock %}
 </body>

@@ -7,19 +7,19 @@
 <div class="page-wrapper">
   <div class="auth-card auth-card--wide" role="region" aria-label="Account registration form">
 
-    <!-- Card Header -->
     <div class="card-header">
       <div class="card-icon" aria-hidden="true">📋</div>
       <h1 class="card-title">Create Your Account</h1>
       <p class="card-subtitle">Fill in the details below to register your FASTag account</p>
     </div>
 
-    <form id="signup-form" action="{{ url_for('main.mpin_setup') }}" method="GET" novalidate>
+    <form id="signup-form" action="{{ url_for('main.signup') }}" method="POST" novalidate>
+      {{ form.hidden_tag() }}
+
+      <input type="hidden" id="aadhaar-raw" name="aadhaar" value="" />
+
       <div class="step-cards">
 
-        <!-- ══════════════════════════════════════════
-             STEP 1 — Personal Information
-             ══════════════════════════════════════════ -->
         <div class="step-card active" id="step-1" role="region" aria-labelledby="step-1-title">
           <div class="step-card-header" role="button" aria-expanded="true" tabindex="0">
             <div class="step-number" aria-hidden="true">1</div>
@@ -29,9 +29,8 @@
           </div>
           <div class="step-card-body">
 
-            <!-- Full Name -->
             <div class="form-group">
-              <label class="form-label" for="full-name">Full Name</label>
+              <label class="form-label" for="full-name">Full Name <span style="color:#D93025">*</span></label>
               <div class="input-wrapper">
                 <input
                   type="text"
@@ -39,6 +38,7 @@
                   name="full_name"
                   class="form-control no-icon"
                   placeholder="Enter your full name (as per Aadhaar)"
+                  value="{{ form.full_name.data or '' }}"
                   autocomplete="name"
                   required
                 />
@@ -46,33 +46,30 @@
               <p class="field-helper">Name must match Aadhaar exactly</p>
             </div>
 
-            <!-- Phone Number + OTP -->
             <div class="form-group">
-              <label class="form-label" for="signup-phone">Phone Number</label>
-              <form id="otp-send-form" action="{{ url_for('main.send_otp') }}" method="POST" style="margin:0;">
-                <div class="input-with-btn">
-                  <input
-                    type="tel"
-                    id="signup-phone"
-                    name="phone"
-                    class="form-control"
-                    placeholder="Enter 10-digit mobile number"
-                    maxlength="10"
-                    inputmode="numeric"
-                    autocomplete="tel"
-                    required
-                  />
-                  <button type="submit" class="btn btn--outline-sm" id="send-otp-btn" aria-label="Send OTP to this phone number">
-                    Send OTP
-                  </button>
-                </div>
-              </form>
+              <label class="form-label" for="signup-phone">Phone Number <span style="color:#D93025">*</span></label>
+              <div class="input-with-btn">
+                <input
+                  type="tel"
+                  id="signup-phone"
+                  name="phone"
+                  class="form-control"
+                  placeholder="Enter 10-digit mobile number"
+                  value="{{ form.phone.data or '' }}"
+                  maxlength="10"
+                  inputmode="numeric"
+                  autocomplete="tel"
+                  required
+                />
+                <button type="button" class="btn btn--outline-sm" id="send-otp-btn" aria-label="Send OTP to this phone number">
+                  Send OTP
+                </button>
+              </div>
               <p class="field-helper">This number will be used for OTP verification</p>
             </div>
 
-            <!-- Email -->
             <div class="form-group">
-              <label class="form-label" for="signup-email">Email Address</label>
+              <label class="form-label" for="signup-email">Email Address <span style="color:#D93025">*</span></label>
               <div class="input-wrapper">
                 <input
                   type="email"
@@ -80,6 +77,7 @@
                   name="email"
                   class="form-control no-icon"
                   placeholder="Enter your email address"
+                  value="{{ form.email.data or '' }}"
                   autocomplete="email"
                   required
                 />
@@ -87,15 +85,15 @@
               <p class="field-helper">A confirmation link will be sent to this email</p>
             </div>
 
-            <!-- Date of Birth -->
             <div class="form-group">
-              <label class="form-label" for="dob">Date of Birth</label>
+              <label class="form-label" for="dob">Date of Birth <span style="color:#D93025">*</span></label>
               <div class="input-wrapper">
                 <input
                   type="date"
                   id="dob"
                   name="dob"
                   class="form-control no-icon"
+                  value="{{ form.dob.data.strftime('%Y-%m-%d') if form.dob.data else '' }}"
                   aria-describedby="dob-error"
                   required
                 />
@@ -111,9 +109,6 @@
           </div>
         </div>
 
-        <!-- ══════════════════════════════════════════
-             STEP 2 — Identity Verification
-             ══════════════════════════════════════════ -->
         <div class="step-card" id="step-2" role="region" aria-labelledby="step-2-title">
           <div class="step-card-header" role="button" aria-expanded="false" tabindex="0">
             <div class="step-number" aria-hidden="true">2</div>
@@ -123,10 +118,9 @@
           </div>
           <div class="step-card-body">
 
-            <!-- Aadhaar -->
             <div class="form-group">
               <label class="form-label" for="aadhaar">
-                Aadhaar Number
+                Aadhaar Number <span style="color:#D93025">*</span>
                 <span class="info-icon-wrap" aria-label="Why do we collect this?">
                   <span class="info-icon" aria-hidden="true">i</span>
                   <span class="tooltip-box" role="tooltip">Why do we collect this?<br>Required for KYC as per RBI guidelines.</span>
@@ -136,7 +130,7 @@
                 <input
                   type="text"
                   id="aadhaar"
-                  name="aadhaar"
+                  name="aadhaar_display"
                   class="form-control no-icon"
                   placeholder="Enter 12-digit Aadhaar number"
                   inputmode="numeric"
@@ -148,7 +142,6 @@
               <p id="aadhaar-helper" class="field-helper">Your Aadhaar is used for KYC verification only</p>
             </div>
 
-            <!-- PAN (optional) -->
             <div class="form-group">
               <label class="form-label" for="pan">
                 PAN Number
@@ -165,6 +158,7 @@
                   name="pan"
                   class="form-control"
                   placeholder="Enter 10-character PAN"
+                  value="{{ form.pan.data or '' }}"
                   maxlength="10"
                   autocomplete="off"
                   aria-describedby="pan-helper"
@@ -182,9 +176,6 @@
           </div>
         </div>
 
-        <!-- ══════════════════════════════════════════
-             STEP 3 — Vehicle Details
-             ══════════════════════════════════════════ -->
         <div class="step-card" id="step-3" role="region" aria-labelledby="step-3-title">
           <div class="step-card-header" role="button" aria-expanded="false" tabindex="0">
             <div class="step-number" aria-hidden="true">3</div>
@@ -194,7 +185,6 @@
           </div>
           <div class="step-card-body">
 
-            <!-- Vehicle Registration -->
             <div class="form-group">
               <label class="form-label" for="vehicle-reg">Vehicle Registration Number</label>
               <div class="input-wrapper">
@@ -204,29 +194,27 @@
                   name="vehicle_reg"
                   class="form-control"
                   placeholder="e.g. TN01AB1234"
+                  value="{{ form.vehicle_reg.data or '' }}"
                   maxlength="10"
                   autocomplete="off"
-                  required
                 />
                 <span id="vrn-tick" class="input-tick" aria-label="Registration number valid">✓</span>
               </div>
             </div>
 
-            <!-- Vehicle Type -->
             <div class="form-group">
               <label class="form-label" for="vehicle-type">Vehicle Type</label>
               <div class="input-wrapper">
-                <select id="vehicle-type" name="vehicle_type" class="form-control" required>
+                <select id="vehicle-type" name="vehicle_type" class="form-control">
                   <option value="">— Select vehicle type —</option>
-                  <option value="two-wheeler">Two Wheeler</option>
-                  <option value="four-wheeler">Four Wheeler</option>
-                  <option value="commercial">Commercial Vehicle</option>
-                  <option value="heavy">Heavy Vehicle</option>
+                  <option value="two-wheeler" {% if form.vehicle_type.data == 'two-wheeler' %}selected{% endif %}>Two Wheeler</option>
+                  <option value="four-wheeler" {% if form.vehicle_type.data == 'four-wheeler' %}selected{% endif %}>Four Wheeler</option>
+                  <option value="commercial"   {% if form.vehicle_type.data == 'commercial'   %}selected{% endif %}>Commercial Vehicle</option>
+                  <option value="heavy"        {% if form.vehicle_type.data == 'heavy'        %}selected{% endif %}>Heavy Vehicle</option>
                 </select>
               </div>
             </div>
 
-            <!-- Permit / RC Number (hidden initially) -->
             <div class="form-group hidden" id="permit-group">
               <label class="form-label" for="permit-rc">Permit / RC Number</label>
               <div class="input-wrapper">
@@ -236,6 +224,7 @@
                   name="permit_rc"
                   class="form-control no-icon"
                   placeholder="Enter permit or RC number"
+                  value="{{ form.permit_rc.data or '' }}"
                   autocomplete="off"
                 />
               </div>
@@ -249,9 +238,6 @@
           </div>
         </div>
 
-        <!-- ══════════════════════════════════════════
-             STEP 4 — Account Security
-             ══════════════════════════════════════════ -->
         <div class="step-card" id="step-4" role="region" aria-labelledby="step-4-title">
           <div class="step-card-header" role="button" aria-expanded="false" tabindex="0">
             <div class="step-number" aria-hidden="true">4</div>
@@ -261,9 +247,8 @@
           </div>
           <div class="step-card-body">
 
-            <!-- Create Password -->
             <div class="form-group">
-              <label class="form-label" for="create-password">Create Password</label>
+              <label class="form-label" for="create-password">Create Password <span style="color:#D93025">*</span></label>
               <div class="input-wrapper">
                 <input
                   type="password"
@@ -278,7 +263,6 @@
                 <button type="button" id="create-pw-toggle" class="input-addon" aria-label="Show password" title="Toggle password visibility">&#128065;</button>
               </div>
 
-              <!-- Strength Bar -->
               <div id="strength-bar-signup" class="strength-bar" aria-hidden="true">
                 <div class="strength-segment"></div>
                 <div class="strength-segment"></div>
@@ -288,7 +272,6 @@
               </div>
               <div id="strength-label-signup" class="strength-label" aria-live="polite"></div>
 
-              <!-- Checklist -->
               <ul id="pw-checklist-signup" class="pw-checklist" aria-label="Password requirements">
                 <li class="pw-check-item" id="check-length">At least 8 characters</li>
                 <li class="pw-check-item" id="check-upper">One uppercase letter (A–Z)</li>
@@ -297,9 +280,8 @@
               </ul>
             </div>
 
-            <!-- Confirm Password -->
             <div class="form-group">
-              <label class="form-label" for="confirm-password">Confirm Password</label>
+              <label class="form-label" for="confirm-password">Confirm Password <span style="color:#D93025">*</span></label>
               <div class="input-wrapper">
                 <input
                   type="password"
@@ -316,7 +298,6 @@
               <span id="confirm-pw-error" class="error-msg" role="alert">Passwords do not match</span>
             </div>
 
-            <!-- Checkboxes -->
             <div class="form-group" style="margin-top:24px;">
               <label style="display:flex; gap:10px; align-items:flex-start; cursor:pointer; font-size:13px; color:#3D4455; line-height:1.5;">
                 <input type="checkbox" id="cb-accuracy" name="cb_accuracy" style="margin-top:2px; width:16px; height:16px; accent-color:#FF6B00; flex-shrink:0;" />
@@ -337,7 +318,28 @@
               </label>
             </div>
 
-            <!-- Create Account Button -->
+            <!-- CAPTCHA -->
+            <div class="form-group" style="margin-top:24px;">
+              <label class="form-label" for="captcha">Security Check <span style="color:#D93025">*</span></label>
+              <div style="margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px solid #C5CBD6; display: inline-block;">
+                  <img src="{{ url_for('main.captcha_image') }}" alt="Captcha Image" style="display: block; cursor: pointer;" onclick="this.src='{{ url_for('main.captcha_image') }}?' + Math.random()" title="Click to refresh" />
+              </div>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  id="captcha"
+                  name="captcha"
+                  class="form-control no-icon{% if form.captcha.errors %} error{% endif %}"
+                  placeholder="Enter the text shown above"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <span id="captcha-error" class="error-msg{% if form.captcha.errors %} visible{% endif %}" role="alert">
+                {{ form.captcha.errors[0] if form.captcha.errors else '' }}
+              </span>
+            </div>
+
             <button
               type="submit"
               id="create-account-btn"
@@ -350,9 +352,8 @@
 
           </div>
         </div>
-        <!-- end step 4 -->
 
-      </div><!-- end .step-cards -->
+      </div>
     </form>
 
     <p class="switch-prompt">
@@ -360,12 +361,9 @@
       <a href="{{ url_for('main.login') }}">Sign in</a>
     </p>
 
-  </div><!-- end .auth-card -->
+  </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     Terms & Conditions Modal
-     ══════════════════════════════════════════ -->
 <div id="terms-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="terms-modal-title">
   <div class="modal-dialog">
     <div class="modal-header">
@@ -374,19 +372,19 @@
     </div>
     <div class="modal-body">
       <h3>1. Acceptance of Terms</h3>
-      <p>By registering for a FASTag account through NHAI's FASTag Portal, you agree to be bound by these Terms &amp; Conditions. If you do not agree to these terms, please do not use this service.</p>
+      <p>By registering for a FASTag account through NHAI's FASTag Portal, you agree to be bound by these Terms &amp; Conditions.</p>
       <h3>2. Eligibility</h3>
-      <p>You must be at least 18 years of age and a resident of India to register for a FASTag account. You must possess a valid vehicle registration certificate and a valid KYC document as prescribed by RBI guidelines.</p>
+      <p>You must be at least 18 years of age and a resident of India to register for a FASTag account.</p>
       <h3>3. FASTag Account</h3>
-      <p>Each vehicle is permitted to have only one FASTag linked to it. You are responsible for maintaining the confidentiality of your account credentials, MPIN, and OTP. NHAI shall not be liable for any loss arising from unauthorized access due to your negligence.</p>
+      <p>Each vehicle is permitted to have only one FASTag linked to it. You are responsible for maintaining the confidentiality of your account credentials, MPIN, and OTP.</p>
       <h3>4. Recharge and Balance</h3>
-      <p>Your FASTag wallet is a semi-closed prepaid payment instrument regulated by the Reserve Bank of India. Minimum and maximum balance limits are as specified by NPCI from time to time. Toll deductions are automated at toll plazas and are irrevocable once processed.</p>
+      <p>Your FASTag wallet is a semi-closed prepaid payment instrument regulated by the Reserve Bank of India.</p>
       <h3>5. KYC Requirements</h3>
-      <p>Full KYC is mandatory for wallets above ₹10,000. You consent to the collection, verification, and storage of your Aadhaar and PAN information solely for the purpose of KYC verification as mandated by the Prevention of Money Laundering Act (PMLA).</p>
+      <p>Full KYC is mandatory for wallets above ₹10,000. You consent to the collection and verification of your Aadhaar and PAN information.</p>
       <h3>6. Dispute Resolution</h3>
-      <p>All disputes arising out of or in connection with this agreement shall first be attempted to be resolved through the NHAI Grievance Redressal mechanism. Unresolved disputes shall be subject to the jurisdiction of courts in New Delhi.</p>
+      <p>All disputes shall first be attempted to be resolved through the NHAI Grievance Redressal mechanism.</p>
       <h3>7. Modification of Terms</h3>
-      <p>NHAI reserves the right to modify these terms at any time. Continued use of the portal after notification of changes constitutes acceptance of the new terms.</p>
+      <p>NHAI reserves the right to modify these terms at any time.</p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn--primary" id="terms-modal-close-footer" style="width:auto;" onclick="document.getElementById('terms-modal').classList.remove('open'); document.body.style.overflow='';">I Understand</button>
@@ -394,9 +392,6 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     Privacy Policy Modal
-     ══════════════════════════════════════════ -->
 <div id="privacy-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="privacy-modal-title">
   <div class="modal-dialog">
     <div class="modal-header">
@@ -405,17 +400,17 @@
     </div>
     <div class="modal-body">
       <h3>1. Information We Collect</h3>
-      <p>We collect personal information including your full name, mobile number, email address, date of birth, Aadhaar number, PAN number, and vehicle registration details. This information is collected solely for the purpose of providing FASTag services.</p>
+      <p>We collect personal information including your full name, mobile number, email address, date of birth, Aadhaar number, PAN number, and vehicle registration details.</p>
       <h3>2. How We Use Your Information</h3>
-      <p>Your information is used for account creation and management, KYC verification as mandated by RBI, processing toll payments, sending transactional notifications, and compliance with legal and regulatory requirements.</p>
+      <p>Your information is used for account creation and management, KYC verification, processing toll payments, and compliance with legal requirements.</p>
       <h3>3. Data Sharing</h3>
-      <p>We do not sell your personal information. We share data only with NPCI, UIDAI (for Aadhaar verification), toll plaza operators for transaction processing, and regulatory authorities as required by law.</p>
+      <p>We do not sell your personal information. We share data only with NPCI, UIDAI, and regulatory authorities as required by law.</p>
       <h3>4. Data Security</h3>
-      <p>We employ industry-standard encryption (TLS 1.3) for data in transit and AES-256 for data at rest. Your Aadhaar data is handled in compliance with the Aadhaar (Data Security) Regulations, 2016.</p>
+      <p>We employ industry-standard encryption (TLS 1.3) for data in transit and AES-256 for data at rest.</p>
       <h3>5. Your Rights</h3>
-      <p>You have the right to access, correct, or request deletion of your personal data, subject to applicable laws. To exercise these rights, contact our Grievance Officer at grievance@fastag.nhai.gov.in.</p>
+      <p>You have the right to access, correct, or request deletion of your personal data, subject to applicable laws.</p>
       <h3>6. Cookie Policy</h3>
-      <p>This portal uses essential session cookies for authentication and security. No third-party tracking or advertising cookies are used.</p>
+      <p>This portal uses essential session cookies for authentication and security only.</p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn--primary" style="width:auto;" onclick="document.getElementById('privacy-modal').classList.remove('open'); document.body.style.overflow='';">I Understand</button>
@@ -426,6 +421,17 @@
 
 {% block scripts %}
 <script>
-  document.addEventListener('DOMContentLoaded', initSignup);
+  document.addEventListener('DOMContentLoaded', function() {
+    initSignup();
+
+    // Sync Aadhaar raw digits to hidden field before submit
+    const aadhaarField = document.getElementById('aadhaar');
+    const aadhaarRaw   = document.getElementById('aadhaar-raw');
+    if (aadhaarField && aadhaarRaw) {
+      document.getElementById('signup-form').addEventListener('submit', function() {
+        aadhaarRaw.value = aadhaarField.dataset.rawValue || '';
+      });
+    }
+  });
 </script>
 {% endblock %}

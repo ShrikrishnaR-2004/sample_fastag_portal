@@ -13,9 +13,12 @@
       <p class="card-subtitle">Create a 4–6 digit PIN for quick access to your FASTag account</p>
     </div>
 
-    <form id="mpin-form" action="{{ url_for('main.login') }}" method="GET" novalidate>
+    <form id="mpin-form" action="{{ url_for('main.mpin_setup') }}" method="POST" novalidate>
+      {{ form.hidden_tag() }}
 
-      <!-- Create MPIN -->
+      <input type="hidden" id="mpin-combined"         name="mpin"         value="" />
+      <input type="hidden" id="mpin-confirm-combined" name="confirm_mpin" value="" />
+
       <div class="mpin-section">
         <p class="mpin-label">Create MPIN</p>
         <div class="mpin-group mpin-create" role="group" aria-label="Create MPIN — 6 digit fields (4–6 digits required)">
@@ -29,7 +32,6 @@
         <p class="mpin-helper">Enter 4–6 digits</p>
       </div>
 
-      <!-- Confirm MPIN -->
       <div class="mpin-section">
         <p class="mpin-label">Confirm MPIN</p>
         <div class="mpin-group mpin-confirm" role="group" aria-label="Confirm MPIN — 6 digit fields">
@@ -53,7 +55,7 @@
 
     </form>
 
-    <a href="{{ url_for('main.login') }}" class="skip-link">Skip for now</a>
+    <a href="{{ url_for('main.dashboard') }}" class="skip-link">Skip for now</a>
 
   </div>
 </div>
@@ -61,6 +63,19 @@
 
 {% block scripts %}
 <script>
-  document.addEventListener('DOMContentLoaded', initMpinSetup);
+  document.addEventListener('DOMContentLoaded', function() {
+    initMpinSetup();
+
+    // Before form submit, combine digit inputs into hidden fields
+    const form = document.getElementById('mpin-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        const mpin    = Array.from(document.querySelectorAll('.mpin-create .mpin-input')).map(i => i.value).join('');
+        const confirm = Array.from(document.querySelectorAll('.mpin-confirm .mpin-input')).map(i => i.value).join('');
+        document.getElementById('mpin-combined').value         = mpin;
+        document.getElementById('mpin-confirm-combined').value = confirm;
+      });
+    }
+  });
 </script>
 {% endblock %}

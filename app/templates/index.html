@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome — FASTag Portal{% endblock %}
+{% block meta_description %}Experience seamless travel with zero stops. Apply for or manage your FASTag account today.{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+  <div class="hero-section">
+
+
+    <!-- Content Card (Glassmorphism) -->
+    <div class="hero-content glass-card">
+      <div class="hero-badge">Next-Gen Electronic Tolling</div>
+      <h1 class="hero-title">Seamless Travel.<br/>Zero Stops.</h1>
+      <p class="hero-subtitle">
+        Manage your FASTag account, check your balance, and breeze through tolls nationwide without a second thought.
+      </p>
+      
+      <div class="hero-actions">
+        <a href="{{ url_for('main.signup') }}" class="btn btn--primary btn--large animate-pulse">Apply Now</a>
+        <a href="{{ url_for('main.login') }}" class="btn btn--outline btn--large">Login to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

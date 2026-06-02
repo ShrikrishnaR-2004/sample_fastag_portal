@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — FASTag Portal{% endblock %}
+{% block meta_description %}Manage your FASTag account, view balance, vehicle details, and recent transactions.{% endblock %}
+
+{% block content %}
+<div class="page-wrapper" style="align-items: flex-start; padding-top: 32px;">
+  <div style="width: 100%; max-width: 860px; display: flex; flex-direction: column; gap: 24px;">
+
+    <div style="
+      background: linear-gradient(135deg, #0A1628 0%, #1A2D50 100%);
+      border-radius: 18px;
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 32px rgba(10,22,40,0.22);
+    ">
+      <div>
+        <p style="color: #8898B8; font-size: 13px; margin-bottom: 4px; letter-spacing: 0.04em;">WELCOME BACK</p>
+        <h1 style="color: #fff; font-size: 28px; font-weight: 700; margin-bottom: 6px;">
+          {{ user.full_name }} 👋
+        </h1>
+        <p style="color: #8898B8; font-size: 14px;">
+          📱 +91 {{ user.phone[:5] }}XXXXX &nbsp;·&nbsp;
+          ✉️ {{ user.email[:3] }}***@{{ user.email.split('@')[1] }}
+        </p>
+        {% if not user.is_phone_verified %}
+          <span style="
+            display:inline-block; margin-top: 10px;
+            background: rgba(255,107,0,0.18); color: #FF8C3A;
+            padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+          ">⚠️ Phone not yet verified</span>
+        {% else %}
+          <span style="
+            display:inline-block; margin-top: 10px;
+            background: rgba(15,169,88,0.18); color: #0FA958;
+            padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+          ">✓ Verified Account</span>
+        {% endif %}
+      </div>
+      <div style="text-align: right; flex-shrink: 0;">
+        <div style="
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 14px;
+          padding: 20px 28px;
+          text-align: center;
+        ">
+          <p style="color: #8898B8; font-size: 12px; letter-spacing: 0.06em; margin-bottom: 6px;">FASTAG BALANCE</p>
+          <p style="color: #fff; font-size: 32px; font-weight: 800; letter-spacing: -0.5px;">₹0.00</p>
+          <button style="
+            margin-top: 12px;
+            background: linear-gradient(135deg,#FF6B00,#FF8C3A);
+            color:#fff; border:none; border-radius: 8px;
+            padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer;
+          ">+ Recharge Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+      <div style="
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px 28px;
+        box-shadow: 0 4px 18px rgba(10,22,40,0.07);
+        border: 1.5px solid #EEF0F4;
+      ">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+          <span style="font-size:24px;">🚗</span>
+          <h2 style="font-size:16px; font-weight:700; color:#0A1628;">Vehicle Details</h2>
+        </div>
+
+        {% if user.vehicle_reg %}
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <div>
+              <p style="font-size:11px; color:#7B8494; letter-spacing:0.05em; margin-bottom:3px;">REGISTRATION NUMBER</p>
+              <p style="
+                font-size:18px; font-weight:800; color:#0A1628;
+                font-family: 'Courier New', monospace;
+                background: #F7F8FA; border-radius: 8px;
+                padding: 6px 12px; display:inline-block;
+              ">{{ user.vehicle_reg }}</p>
+            </div>
+            <div>
+              <p style="font-size:11px; color:#7B8494; letter-spacing:0.05em; margin-bottom:3px;">VEHICLE TYPE</p>
+              <p style="font-size:15px; font-weight:600; color:#3D4455; text-transform:capitalize;">
+                {{ user.vehicle_type or '—' }}
+              </p>
+            </div>
+          </div>
+        {% else %}
+          <div style="text-align:center; padding:20px 0;">
+            <p style="font-size:36px; margin-bottom:10px;">🚘</p>
+            <p style="color:#7B8494; font-size:14px;">No vehicle linked yet</p>
+            <button style="
+              margin-top:12px; background:none; border:1.5px solid #FF6B00;
+              color:#FF6B00; border-radius:8px; padding:8px 18px;
+              font-size:13px; font-weight:600; cursor:pointer;
+            ">Link Vehicle</button>
+          </div>
+        {% endif %}
+      </div>
+
+      <div style="
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px 28px;
+        box-shadow: 0 4px 18px rgba(10,22,40,0.07);
+        border: 1.5px solid #EEF0F4;
+      ">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+          <span style="font-size:24px;">🛡️</span>
+          <h2 style="font-size:16px; font-weight:700; color:#0A1628;">Account Security</h2>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <p style="font-size:14px; font-weight:600; color:#3D4455;">MPIN</p>
+              <p style="font-size:12px; color:#7B8494;">Quick access PIN</p>
+            </div>
+            {% if user.mpin_hash %}
+              <span style="background:#E8F8EF; color:#0A6634; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">✓ Set</span>
+            {% else %}
+              <a href="{{ url_for('main.mpin_setup') }}" style="
+                background:#FFF3E8; color:#FF6B00; padding:4px 12px;
+                border-radius:20px; font-size:12px; font-weight:600; text-decoration:none;
+              ">Set up →</a>
+            {% endif %}
+          </div>
+
+          <div style="height:1px; background:#EEF0F4;"></div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <p style="font-size:14px; font-weight:600; color:#3D4455;">KYC</p>
+              <p style="font-size:12px; color:#7B8494;">Document verification</p>
+            </div>
+            <span style="background:#FFF8E1; color:#7A4F00; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600;">Pending</span>
+          </div>
+
+          <div style="height:1px; background:#EEF0F4;"></div>
+
+          <div>
+            <p style="font-size:11px; color:#7B8494; letter-spacing:0.05em;">MEMBER SINCE</p>
+            <p style="font-size:14px; font-weight:600; color:#3D4455;">
+              {{ user.created_at.strftime('%d %b %Y') if user.created_at else '—' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 18px rgba(10,22,40,0.07);
+      border: 1.5px solid #EEF0F4;
+    ">
+      <h2 style="font-size:16px; font-weight:700; color:#0A1628; margin-bottom:20px;">Quick Actions</h2>
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:14px;">
+        {% set actions = [
+          ('💳', 'Recharge', '#'),
+          ('📄', 'Statement', '#'),
+          ('🔄', 'Transfer', '#'),
+          ('🆘', 'Support', '#'),
+        ] %}
+        {% for icon, label, href in actions %}
+          <a href="{{ href }}" style="
+            display:flex; flex-direction:column; align-items:center; gap:8px;
+            padding:18px 12px; border-radius:12px;
+            border:1.5px solid #EEF0F4; text-decoration:none;
+            transition: all 0.2s;
+          " onmouseover="this.style.borderColor='#FF6B00';this.style.background='#FFF3E8';"
+             onmouseout="this.style.borderColor='#EEF0F4';this.style.background='#fff';">
+            <span style="font-size:28px;">{{ icon }}</span>
+            <span style="font-size:13px; font-weight:600; color:#3D4455;">{{ label }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 18px rgba(10,22,40,0.07);
+      border: 1.5px solid #EEF0F4;
+    ">
+      <h2 style="font-size:16px; font-weight:700; color:#0A1628; margin-bottom:20px;">Recent Transactions</h2>
+      <div style="text-align:center; padding:36px 0; color:#C5CBD6;">
+        <p style="font-size:40px; margin-bottom:12px;">🧾</p>
+        <p style="font-size:15px; font-weight:600; color:#7B8494;">No transactions yet</p>
+        <p style="font-size:13px; color:#C5CBD6; margin-top:6px;">Recharge your FASTag wallet to start making transactions</p>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="{{ url_for('main.logout') }}" style="
+        color:#7B8494; font-size:13px; text-decoration:none;
+        padding: 10px 24px; border-radius:8px;
+        border:1.5px solid #EEF0F4; display:inline-block;
+        transition: all 0.2s;
+      "
+      onmouseover="this.style.color='#D93025';this.style.borderColor='#D93025';"
+      onmouseout="this.style.color='#7B8494';this.style.borderColor='#EEF0F4';">
+        Sign Out →
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

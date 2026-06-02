@@ -1,20 +1,5 @@
-/* ============================================================
-   FASTag Portal — Main Stylesheet
-   Color Palette:
-     Primary:  #0A1628 (deep navy)
-     Accent:   #FF6B00 (saffron orange)
-     Surface:  #FFFFFF (white)
-     Gray-50:  #F7F8FA
-     Gray-100: #EEF0F4
-     Gray-300: #C5CBD6
-     Gray-500: #7B8494
-     Gray-700: #3D4455
-     Success:  #0FA958
-     Danger:   #D93025
-     Info:     #1A73E8
-   ============================================================ */
 
-/* ── Reset & Base ── */
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -47,13 +32,11 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #EEF0F4; }
 ::-webkit-scrollbar-thumb { background: #C5CBD6; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #7B8494; }
 
-/* ── Header / Nav ── */
 .site-header {
   background: #0A1628;
   padding: 0 24px;
@@ -120,7 +103,6 @@ a:hover {
   text-decoration: none;
 }
 
-/* ── Page Wrapper ── */
 .page-wrapper {
   flex: 1;
   display: flex;
@@ -129,7 +111,6 @@ a:hover {
   padding: 40px 16px 60px;
 }
 
-/* ── Auth Card ── */
 .auth-card {
   background: #FFFFFF;
   border-radius: 16px;
@@ -152,7 +133,6 @@ a:hover {
   max-width: 580px;
 }
 
-/* Card Header */
 .card-header {
   text-align: center;
   margin-bottom: 32px;
@@ -184,7 +164,6 @@ a:hover {
   line-height: 1.5;
 }
 
-/* ── Form Elements ── */
 .form-group {
   margin-bottom: 20px;
   position: relative;
@@ -244,12 +223,10 @@ a:hover {
   box-shadow: 0 0 0 3px rgba(15,169,88,0.10);
 }
 
-/* Input no right padding when no icon */
 .form-control.no-icon {
   padding-right: 14px;
 }
 
-/* Select */
 select.form-control {
   padding-right: 36px;
   cursor: pointer;
@@ -258,7 +235,6 @@ select.form-control {
   background-position: right 12px center;
 }
 
-/* Input addons */
 .input-addon {
   position: absolute;
   right: 12px;
@@ -287,7 +263,6 @@ select.form-control {
   white-space: nowrap;
 }
 
-/* Input with inline button (phone + OTP) */
 .input-with-btn {
   display: flex;
   gap: 10px;
@@ -298,7 +273,6 @@ select.form-control {
   padding-right: 14px;
 }
 
-/* Validation tick */
 .input-tick {
   position: absolute;
   right: 12px;
@@ -311,7 +285,6 @@ select.form-control {
 }
 .input-tick.visible { display: block; }
 
-/* Info icon + tooltip */
 .info-icon-wrap {
   display: inline-flex;
   align-items: center;
@@ -361,7 +334,6 @@ select.form-control {
 }
 .info-icon-wrap:hover .tooltip-box { display: block; }
 
-/* Helper text */
 .field-helper {
   font-size: 12px;
   color: #7B8494;
@@ -369,7 +341,6 @@ select.form-control {
   line-height: 1.4;
 }
 
-/* Error message */
 .error-msg {
   display: none;
   font-size: 12px;
@@ -379,7 +350,6 @@ select.form-control {
 }
 .error-msg.visible { display: block; }
 
-/* ── Buttons ── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -478,7 +448,6 @@ select.form-control {
   padding: 0 16px;
 }
 
-/* ── Divider ── */
 .divider {
   display: flex;
   align-items: center;
@@ -494,7 +463,6 @@ select.form-control {
   background: #EEF0F4;
 }
 
-/* ── Social Buttons ── */
 .social-btn-group {
   display: flex;
   flex-direction: column;
@@ -514,7 +482,6 @@ select.form-control {
   font-size: 18px;
 }
 
-/* ── Switch Prompt ── */
 .switch-prompt {
   text-align: center;
   font-size: 14px;
@@ -522,7 +489,6 @@ select.form-control {
   margin-top: 24px;
 }
 
-/* ── Flash Messages ── */
 .flash-banner {
   border-radius: 10px;
   padding: 12px 16px;
@@ -573,7 +539,6 @@ select.form-control {
 }
 .lockout-banner.visible { display: flex; }
 
-/* ── Forgot Password Stages ── */
 .fp-stage { display: none; }
 .fp-stage.active { display: block; }
 
@@ -598,7 +563,6 @@ select.form-control {
   color: #7B8494;
 }
 
-/* ── OTP Inputs ── */
 .otp-group {
   display: flex;
   gap: 10px;
@@ -642,7 +606,6 @@ select.form-control {
   margin-bottom: 8px;
 }
 
-/* ── Password Strength ── */
 .strength-bar {
   display: flex;
   gap: 4px;
@@ -666,7 +629,6 @@ select.form-control {
   transition: color 0.3s ease;
 }
 
-/* Strength level colors */
 .strength-tooshort .strength-segment:nth-child(1) { background: #D93025; }
 .strength-weak .strength-segment:nth-child(1),
 .strength-weak .strength-segment:nth-child(2) { background: #F4820A; }
@@ -685,7 +647,6 @@ select.form-control {
 .strength-good .strength-label     { color: #0FA958; }
 .strength-strong .strength-label   { color: #0FA958; }
 
-/* Password Checklist */
 .pw-checklist {
   list-style: none;
   margin-top: 10px;
@@ -719,7 +680,6 @@ select.form-control {
   color: #0FA958;
 }
 
-/* ── Signup Step Cards ── */
 .step-cards {
   display: flex;
   flex-direction: column;
@@ -812,7 +772,6 @@ select.form-control {
   margin-top: 16px;
 }
 
-/* ── Success State (reset_success) ── */
 .success-icon {
   width: 80px;
   height: 80px;
@@ -848,7 +807,6 @@ select.form-control {
   margin-top: 16px;
 }
 
-/* ── MPIN Inputs ── */
 .mpin-group {
   display: flex;
   gap: 10px;
@@ -904,7 +862,6 @@ select.form-control {
   margin-bottom: 24px;
 }
 
-/* ── Skip Link ── */
 .skip-link {
   display: block;
   text-align: center;
@@ -918,7 +875,6 @@ select.form-control {
   text-decoration: none;
 }
 
-/* ── Footer ── */
 .site-footer {
   background: #0A1628;
   color: #8898B8;
@@ -935,7 +891,6 @@ select.form-control {
   text-decoration: none;
 }
 
-/* ── Modal ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1029,7 +984,6 @@ select.form-control {
   flex-shrink: 0;
 }
 
-/* ── Utility ── */
 .text-center { text-align: center; }
 .mt-4 { margin-top: 16px; }
 .mt-6 { margin-top: 24px; }
@@ -1037,7 +991,6 @@ select.form-control {
 
 .hidden { display: none !important; }
 
-/* ── Password reuse warning ── */
 .pw-reuse-warning {
   background: #FFF8E1;
   border: 1px solid #FFE082;
@@ -1050,7 +1003,6 @@ select.form-control {
 }
 .pw-reuse-warning.visible { display: block; }
 
-/* ── Responsive ── */
 @media (max-width: 540px) {
   .auth-card {
     padding: 28px 20px;
@@ -1091,4 +1043,114 @@ select.form-control {
   }
   .otp-group { gap: 5px; }
   .mpin-group { gap: 5px; }
+}
+
+/* ── Landing Page Hero & Animations ── */
+.landing-page {
+  position: relative;
+  min-height: calc(100vh - 64px); 
+  overflow: hidden;
+  background: url('../img/toll_plaza_hero.png') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.landing-page::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 22, 40, 0.4); /* Dark overlay for text readability */
+  z-index: 1;
+}
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* align the content card to the left */
+  padding: 40px;
+  z-index: 2;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+  background: rgba(16, 28, 48, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 50px 40px;
+  max-width: 500px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(255, 107, 0, 0.15);
+  color: #FF6B00;
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  color: #FFFFFF;
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #FFFFFF 0%, #C5CBD6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  color: #8898B8;
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.btn--large {
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Animations */
+.animate-pulse {
+  animation: pulse-shadow 2s infinite;
+}
+
+@keyframes pulse-shadow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(255, 107, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0); }
+}
+
+@media (max-width: 992px) {
+  .hero-section {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+  }
+  .hero-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
