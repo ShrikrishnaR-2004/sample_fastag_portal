@@ -119,7 +119,7 @@ up your account security.{% endblock %}
                 </span>
               </label>
               <div class="input-wrapper">
-                <input type="text" id="pan" name="pan" class="form-control" placeholder="Enter 10-character PAN"
+                <input type="text" id="pan" name="pan" class="form-control" placeholder="e.g. ABCDE1234F"
                   value="{{ form.pan.data or '' }}" maxlength="10" autocomplete="off" aria-describedby="pan-helper" />
                 <span id="pan-tick" class="input-tick" aria-label="PAN number valid">✓</span>
               </div>
@@ -371,11 +371,20 @@ up your account security.{% endblock %}
   document.addEventListener('DOMContentLoaded', function () {
     initSignup();
 
+    // Strip space from phone before submit (JS formats as "XXXXX XXXXX")
+    const phoneInput = document.getElementById('signup-phone');
+    const signupForm = document.getElementById('signup-form');
+    if (signupForm && phoneInput) {
+      signupForm.addEventListener('submit', function () {
+        phoneInput.value = phoneInput.value.replace(/\s/g, '');
+      });
+    }
+
     // Sync Aadhaar raw digits to hidden field before submit
     const aadhaarField = document.getElementById('aadhaar');
     const aadhaarRaw = document.getElementById('aadhaar-raw');
-    if (aadhaarField && aadhaarRaw) {
-      document.getElementById('signup-form').addEventListener('submit', function () {
+    if (aadhaarField && aadhaarRaw && signupForm) {
+      signupForm.addEventListener('submit', function () {
         aadhaarRaw.value = aadhaarField.dataset.rawValue || '';
       });
     }

@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField, PasswordField, DateField, SelectField,
@@ -22,9 +23,9 @@ def strong_password(form, field):
     if errors:
         raise ValidationError('Password must contain: ' + ', '.join(errors) + '.')
 def indian_mobile(form, field):
-    num = (field.data or '').replace(' ', '')
-    if not re.fullmatch(r'[6-9]\d{9}', num):
-        raise ValidationError('Enter a valid 10-digit Indian mobile number.')
+    num = (field.data or '').replace(' ', '').strip()
+    if not re.fullmatch(r'\d{10}', num):
+        raise ValidationError('Enter a valid 10-digit mobile number.')
 def valid_aadhaar(form, field):
     raw = (field.data or '').replace(' ', '').replace('•', '')
     if raw and not re.fullmatch(r'\d{12}', raw):
