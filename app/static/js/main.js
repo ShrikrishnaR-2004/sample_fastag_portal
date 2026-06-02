@@ -205,7 +205,7 @@ function initSignup() {
     });
   }
 
-  const aadhaarInput = document.getElementById('aadhaar');
+  const aadhaarInput = document.getElementById('aadhaar-display');
   if (aadhaarInput) {
     aadhaarInput.addEventListener('input', (e) => {
 

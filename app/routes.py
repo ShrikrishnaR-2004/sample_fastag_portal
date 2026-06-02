@@ -21,6 +21,9 @@ main = Blueprint('main', __name__)
 def _hash_aadhaar(raw: str) -> str:
     return hashlib.sha256(raw.encode('utf-8')).hexdigest()
 
+def _hash_pan(raw: str) -> str:
+    return hashlib.sha256(raw.encode('utf-8')).hexdigest()
+
 def _normalise_phone(phone: str) -> str:
     return phone.replace(' ', '').strip()
 
@@ -114,7 +117,7 @@ def signup():
             phone        = phone,
             email        = form.email.data.lower().strip(),
             dob          = dob,
-            pan          = form.pan.data.upper().strip() if form.pan.data else None,
+            pan_hash     = _hash_pan(form.pan.data.upper().strip()) if form.pan.data else None,
             vehicle_reg  = form.vehicle_reg.data.upper().replace(' ', '') if form.vehicle_reg.data else None,
             vehicle_type = form.vehicle_type.data or None,
             permit_rc    = form.permit_rc.data.strip() if form.permit_rc.data else None,

@@ -101,7 +101,7 @@ up your account security.{% endblock %}
                 </span>
               </label>
               <div class="input-wrapper">
-                <input type="text" id="aadhaar" name="aadhaar_display" class="form-control no-icon"
+                <input type="text" id="aadhaar-display" name="aadhaar_display" class="form-control no-icon"
                   placeholder="Enter 12-digit Aadhaar number" inputmode="numeric" autocomplete="off"
                   aria-describedby="aadhaar-helper" required />
               </div>
@@ -381,11 +381,11 @@ up your account security.{% endblock %}
     }
 
     // Sync Aadhaar raw digits to hidden field before submit
-    const aadhaarField = document.getElementById('aadhaar');
-    const aadhaarRaw = document.getElementById('aadhaar-raw');
-    if (aadhaarField && aadhaarRaw && signupForm) {
+    const aadhaarField = document.getElementById('aadhaar-display');
+    const aadhaarHidden = document.getElementById('aadhaar');
+    if (aadhaarField && aadhaarHidden && signupForm) {
       signupForm.addEventListener('submit', function () {
-        aadhaarRaw.value = aadhaarField.dataset.rawValue || '';
+        aadhaarHidden.value = aadhaarField.dataset.rawValue || '';
       });
     }
   });
