@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from flask_login import UserMixin
 from . import db, bcrypt
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id           = db.Column(db.Integer, primary_key=True)
@@ -45,6 +46,7 @@ class User(UserMixin, db.Model):
         return bcrypt.check_password_hash(self.mpin_hash, raw_mpin)
     def __repr__(self) -> str:
         return f'<User {self.phone}>'
+    
 class PasswordHistory(db.Model):
     __tablename__ = 'password_history'
     id            = db.Column(db.Integer, primary_key=True)
@@ -53,6 +55,7 @@ class PasswordHistory(db.Model):
     created_at    = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     def __repr__(self) -> str:
         return f'<PasswordHistory user={self.user_id}>'
+    
 class PasswordResetToken(db.Model):
     __tablename__ = 'password_reset_tokens'
     id         = db.Column(db.Integer, primary_key=True)
