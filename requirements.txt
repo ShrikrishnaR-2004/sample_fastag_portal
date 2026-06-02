@@ -1,0 +1,15 @@
+flask
+flask-sqlalchemy
+flask-migrate
+flask-login
+flask-mail
+flask-bcrypt
+flask-wtf
+flask-jwt-extended
+python-dotenv
+email-validator
+itsdangerous
+twilio
+pymysql
+wtforms
+pillow
