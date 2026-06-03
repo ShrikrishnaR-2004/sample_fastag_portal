@@ -25,6 +25,10 @@ class User(UserMixin, db.Model):
                                         lazy='dynamic', cascade='all, delete-orphan')
     reset_tokens     = db.relationship('PasswordResetToken', backref='user',
                                         lazy='dynamic', cascade='all, delete-orphan')
+    vehicles         = db.relationship('Vehicle', backref='user',
+                                        lazy='dynamic', cascade='all, delete-orphan')
+    wallet           = db.relationship('Wallet', backref='user', uselist=False,
+                                        cascade='all, delete-orphan')
     def set_password(self, raw_password: str) -> None:
         pw_hash = bcrypt.generate_password_hash(raw_password).decode('utf-8')
         self.password_hash = pw_hash
@@ -74,3 +78,37 @@ class PasswordResetToken(db.Model):
         return not self.used and exp > now
     def __repr__(self) -> str:
         return f'<PasswordResetToken user={self.user_id} used={self.used}>'
+
+class Wallet(db.Model):
+    __tablename__ = 'wallets'
+    id               = db.Column(db.Integer, primary_key=True)
+    user_id          = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True, index=True)
+    balance          = db.Column(db.Numeric(10, 2), default=0.00, nullable=False)
+    monthly_limit    = db.Column(db.Numeric(10, 2), default=200000.00, nullable=False)
+    threshold_limit  = db.Column(db.Numeric(10, 2), default=100.00, nullable=False)
+    security_deposit = db.Column(db.Numeric(10, 2), default=200.00, nullable=False)
+    created_at       = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at       = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc),
+                                 onupdate=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self) -> str:
+        return f'<Wallet user={self.user_id} balance={self.balance}>'
+
+class Vehicle(db.Model):
+    __tablename__ = 'vehicles'
+    id                 = db.Column(db.Integer, primary_key=True)
+    user_id            = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
+    vehicle_number     = db.Column(db.String(20), nullable=False, unique=True, index=True)
+    tag_id             = db.Column(db.String(64), nullable=True, unique=True, index=True)
+    vehicle_class      = db.Column(db.String(50), nullable=False)
+    is_commercial      = db.Column(db.Boolean, default=False, nullable=False)
+    joining_fee        = db.Column(db.Numeric(10, 2), default=100.00, nullable=False)
+    min_recharge       = db.Column(db.Numeric(10, 2), default=200.00, nullable=False)
+    status             = db.Column(db.String(30), default='Active', nullable=False)
+    has_annual_pass    = db.Column(db.Boolean, default=False, nullable=False)
+    created_at         = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at         = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc),
+                                   onupdate=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self) -> str:
+        return f'<Vehicle {self.vehicle_number} user={self.user_id}>'

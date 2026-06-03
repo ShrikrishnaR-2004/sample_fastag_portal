@@ -8,7 +8,7 @@ from flask import (
 )
 from flask_login import login_user, logout_user, login_required, current_user
 from . import db, bcrypt
-from .models import User, PasswordResetToken, PasswordHistory
+from .models import User, PasswordResetToken, PasswordHistory, Wallet, Vehicle
 from .forms import (
     LoginForm, SignupForm, OtpVerifyForm, MpinSetupForm,
     ForgotPasswordForm, ResetPasswordForm
@@ -89,7 +89,19 @@ def logout():
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', user=current_user)
+    # Pass dynamic backend data and some mock financial info for the dashboard
+    stats = {
+        'no_of_tags': current_user.vehicles.count(),
+        'threshold_limit': current_user.wallet.threshold_limit if current_user.wallet else 100.00,
+        'monthly_limit': current_user.wallet.monthly_limit if current_user.wallet else 200000.00,
+        'wallet_balance': current_user.wallet.balance if current_user.wallet else 0.00,
+        'security_deposit': current_user.wallet.security_deposit if current_user.wallet else 200.00
+    }
+    
+    vehicles = current_user.vehicles.all()
+        
+    now_str = datetime.now().strftime("%a, %d %b %Y")
+    return render_template('dashboard.html', user=current_user, stats=stats, vehicles=vehicles, now=now_str)
 @main.route('/signup', methods=['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
@@ -133,8 +145,25 @@ def signup():
         user.password_hash = pw_hash
         db.session.add(user)
         db.session.flush()          # user.id is now assigned by the DB
+        
         history = PasswordHistory(user_id=user.id, password_hash=pw_hash)
         db.session.add(history)
+        
+        # Create a wallet for the new user
+        wallet = Wallet(user_id=user.id)
+        db.session.add(wallet)
+        
+        # If user registered a vehicle, add it
+        if user.vehicle_reg:
+            vehicle = Vehicle(
+                user_id=user.id,
+                vehicle_number=user.vehicle_reg,
+                vehicle_class=user.vehicle_type or 'Car/Jeep/Van(VC4)',
+                is_commercial=False,
+                status='Active'
+            )
+            db.session.add(vehicle)
+        
         db.session.commit()
         otp = generate_otp()
         session['otp_code']    = otp
