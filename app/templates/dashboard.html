@@ -3,6 +3,9 @@
 {% block title %}Dashboard — FASTag Portal{% endblock %}
 {% block meta_description %}Manage your FASTag account, view limits and transactions.{% endblock %}
 
+{# Suppress default flash block — we render flashes inside .db-main instead #}
+{% block flash %}{% endblock %}
+
 {% block content %}
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -740,6 +743,19 @@
         <button class="upi-btn">⚡ Set UPI AutoPay</button>
       </div>
     </div>
+
+    <!-- Flash Messages (inside main column, no sidebar gap) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="padding: 14px 32px 0;">
+          {% for category, message in messages %}
+            <div class="flash-banner flash-banner--{{ category }}" role="alert" style="margin-bottom: 8px;">
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
     <!-- Content -->
     <div class="db-content">

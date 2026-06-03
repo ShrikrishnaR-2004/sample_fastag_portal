@@ -29,19 +29,20 @@
     </nav>
   </header>
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="flash-container" style="padding: 16px 16px 0; max-width: 800px; margin: 0 auto; width: 100%;">
-        {% for category, message in messages %}
-          <div class="flash-banner flash-banner--{{ category }}" role="alert">
-            <span>{{ message }}</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
-
   <main id="main-content" role="main">
+    {% block flash %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container" style="padding: 16px 16px 0; max-width: 800px; margin: 0 auto; width: 100%;">
+            {% for category, message in messages %}
+              <div class="flash-banner flash-banner--{{ category }}" role="alert">
+                <span>{{ message }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    {% endblock %}
     {% block content %}{% endblock %}
   </main>
 
