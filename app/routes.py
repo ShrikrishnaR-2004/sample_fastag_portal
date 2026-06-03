@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import secrets
 from datetime import datetime, timezone, timedelta
 from flask import (
@@ -18,11 +19,13 @@ from .services.captcha_service import generate_captcha_text, generate_captcha_sv
 
 main = Blueprint('main', __name__)
 
-def _hash_aadhaar(raw: str) -> str:
-    return hashlib.sha256(raw.encode('utf-8')).hexdigest()
+def _hash_aadhaar(raw: str, pepper: str) -> str:
+    """HMAC-SHA256 of the raw 12-digit Aadhaar using a secret pepper."""
+    return hmac.new(pepper.encode('utf-8'), raw.encode('utf-8'), hashlib.sha256).hexdigest()
 
-def _hash_pan(raw: str) -> str:
-    return hashlib.sha256(raw.encode('utf-8')).hexdigest()
+def _hash_pan(raw: str, pepper: str) -> str:
+    """HMAC-SHA256 of the normalised PAN using a secret pepper."""
+    return hmac.new(pepper.encode('utf-8'), raw.encode('utf-8'), hashlib.sha256).hexdigest()
 
 def _normalise_phone(phone: str) -> str:
     return phone.replace(' ', '').strip()
@@ -112,19 +115,20 @@ def signup():
         if age < 18:
             flash('You must be at least 18 years old to register.', 'danger')
             return render_template('signup.html', form=form)
+        pepper = current_app.config['KYC_PEPPER']
         user = User(
             full_name    = form.full_name.data.strip(),
             phone        = phone,
             email        = form.email.data.lower().strip(),
             dob          = dob,
-            pan_hash     = _hash_pan(form.pan.data.upper().strip()) if form.pan.data else None,
+            pan_hash     = _hash_pan(form.pan.data.upper().strip(), pepper) if form.pan.data else None,
             vehicle_reg  = form.vehicle_reg.data.upper().replace(' ', '') if form.vehicle_reg.data else None,
             vehicle_type = form.vehicle_type.data or None,
             permit_rc    = form.permit_rc.data.strip() if form.permit_rc.data else None,
         )
         aadhaar_raw = (form.aadhaar.data or '').replace(' ', '').replace('•', '')
         if aadhaar_raw and len(aadhaar_raw) == 12:
-            user.aadhaar_hash = _hash_aadhaar(aadhaar_raw)
+            user.aadhaar_hash = _hash_aadhaar(aadhaar_raw, pepper)
         pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user.password_hash = pw_hash
         db.session.add(user)

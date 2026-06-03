@@ -207,37 +207,68 @@ function initSignup() {
 
   const aadhaarInput = document.getElementById('aadhaar-display');
   if (aadhaarInput) {
-    aadhaarInput.addEventListener('input', (e) => {
 
-      let digits = aadhaarInput.value.replace(/\D/g, '').substring(0, 12);
-
-      let masked = '';
+    // Format plain digits string as "XXXX XXXX XXXX" (spaces every 4)
+    function formatAadhaar(digits) {
+      let out = '';
       for (let i = 0; i < digits.length; i++) {
-        if (i > 0 && i % 4 === 0) masked += ' ';
-        masked += (i < digits.length - 4) ? '•' : digits[i];
+        if (i > 0 && i % 4 === 0) out += ' ';
+        out += digits[i];
       }
+      return out;
+    }
 
+    // Mask first 8 digits with bullets, show last 4: "•••• •••• 3456"
+    function maskAadhaar(digits) {
+      let out = '';
+      for (let i = 0; i < digits.length; i++) {
+        if (i > 0 && i % 4 === 0) out += ' ';
+        out += (i < 8) ? '•' : digits[i];
+      }
+      return out;
+    }
+
+    // On input: strip non-digits, cap at 12, store in rawValue, reformat display
+    aadhaarInput.addEventListener('input', () => {
+      const digits = aadhaarInput.value.replace(/\D/g, '').substring(0, 12);
       aadhaarInput.dataset.rawValue = digits;
-      aadhaarInput.value = masked;
+      const formatted = formatAadhaar(digits);
+      aadhaarInput.value = formatted;
+      // Keep cursor at end
+      aadhaarInput.setSelectionRange(formatted.length, formatted.length);
     });
 
-    aadhaarInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Backspace') {
-        const raw = (aadhaarInput.dataset.rawValue || '');
-        aadhaarInput.dataset.rawValue = raw.slice(0, -1);
-
-        aadhaarInput.dispatchEvent(new Event('input'));
-        e.preventDefault();
-      } else if (/^\d$/.test(e.key)) {
-        const raw = (aadhaarInput.dataset.rawValue || '');
-        if (raw.length < 12) {
-          aadhaarInput.dataset.rawValue = raw + e.key;
-          aadhaarInput.dispatchEvent(new Event('input'));
-        }
-        e.preventDefault();
+    // On blur: if all 12 digits entered, show masked version
+    aadhaarInput.addEventListener('blur', () => {
+      const digits = aadhaarInput.dataset.rawValue || '';
+      if (digits.length > 0) {
+        aadhaarInput.value = maskAadhaar(digits);
       }
+    });
+
+    // On focus: restore plain digit display so user can continue editing
+    aadhaarInput.addEventListener('focus', () => {
+      const digits = aadhaarInput.dataset.rawValue || '';
+      const formatted = formatAadhaar(digits);
+      aadhaarInput.value = formatted;
+      // Move cursor to end (defer so browser doesn't override)
+      setTimeout(() => {
+        aadhaarInput.setSelectionRange(formatted.length, formatted.length);
+      }, 0);
+    });
+
+    // Paste: strip non-digits, take first 12, show formatted
+    aadhaarInput.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData)
+        .getData('text').replace(/\D/g, '').substring(0, 12);
+      aadhaarInput.dataset.rawValue = pasted;
+      const formatted = formatAadhaar(pasted);
+      aadhaarInput.value = formatted;
+      aadhaarInput.setSelectionRange(formatted.length, formatted.length);
     });
   }
+
 
   const panInput = document.getElementById('pan');
   const panTick = document.getElementById('pan-tick');

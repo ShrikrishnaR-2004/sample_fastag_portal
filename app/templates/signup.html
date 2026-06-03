@@ -17,7 +17,7 @@ up your account security.{% endblock %}
     <form id="signup-form" action="{{ url_for('main.signup') }}" method="POST" novalidate>
       {{ form.hidden_tag() }}
 
-      <input type="hidden" id="aadhaar-raw" name="aadhaar" value="" />
+      <input type="hidden" id="aadhaar" name="aadhaar" value="" />
 
       <div class="step-cards">
 
@@ -380,12 +380,17 @@ up your account security.{% endblock %}
       });
     }
 
-    // Sync Aadhaar raw digits to hidden field before submit
+    // Sync Aadhaar raw digits to both fields before submit.
+    // The display field may be showing the masked "•••• •••• 9012" version
+    // (set by the blur handler), so we overwrite it with the raw digits so
+    // the server-side validator receives a clean 12-digit string.
     const aadhaarField = document.getElementById('aadhaar-display');
     const aadhaarHidden = document.getElementById('aadhaar');
     if (aadhaarField && aadhaarHidden && signupForm) {
       signupForm.addEventListener('submit', function () {
-        aadhaarHidden.value = aadhaarField.dataset.rawValue || '';
+        const raw = aadhaarField.dataset.rawValue || '';
+        aadhaarHidden.value = raw;       // hidden field → used for hashing
+        aadhaarField.value = raw;        // display field → passes server validator
       });
     }
   });

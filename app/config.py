@@ -34,6 +34,8 @@ class Config:
     REMEMBER_COOKIE_DURATION = 86400  
     RESET_TOKEN_EXPIRY_MINUTES = 30
     PASSWORD_HISTORY_LIMIT     = 3
+    # Pepper for HMAC-SHA256 hashing of Aadhaar / PAN (never store plaintext)
+    KYC_PEPPER = os.getenv('KYC_PEPPER', 'change-this-pepper-in-production')
 class DevelopmentConfig(Config):
     DEBUG = True
 class ProductionConfig(Config):
