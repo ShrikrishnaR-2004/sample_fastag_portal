@@ -4,7 +4,7 @@
 {% block meta_description %}Experience seamless travel with zero stops. Apply for or manage your FASTag account today.{% endblock %}
 
 {% block content %}
-<div class="landing-page">
+<div class="landing-page" id="hero">
   <div class="hero-section">
 
 
@@ -23,4 +23,321 @@
     </div>
   </div>
 </div>
+
+<div class="homepage-sections">
+
+  <!-- Benefits -->
+  <section id="benefits" class="landing-section landing-section--light">
+    <div class="landing-container">
+      <div class="section-header reveal reveal-scale">
+        <span class="section-badge">Benefits</span>
+        <h2 class="section-title">Smart Balance Management</h2>
+        <p class="section-subtitle">Stay funded on every journey with automated wallet and tag balance top-ups — no manual intervention required.</p>
+        <div class="section-header-line" aria-hidden="true"></div>
+      </div>
+      <div class="benefits-grid">
+        <article class="benefit-card reveal reveal-left reveal-delay-1">
+          <div class="benefit-icon">🔄</div>
+          <h3>Auto Recharge</h3>
+          <p>CASA account holders have their wallet replenished directly from their linked bank account whenever the balance runs low — effortless funding for uninterrupted highway travel.</p>
+        </article>
+        <article class="benefit-card reveal reveal-right reveal-delay-2">
+          <div class="benefit-icon">⚡</div>
+          <h3>Auto Allocation</h3>
+          <p>Your FASTag is topped up automatically once it hits a low balance threshold, drawing from your wallet whenever sufficient funds are available — keeping your tag ready at all times.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="landing-section landing-section--dark">
+    <div class="landing-container">
+      <div class="section-header reveal reveal-scale">
+        <span class="section-badge section-badge--orange">Platform Features</span>
+        <h2 class="section-title section-title--light">Everything You Need on the Road</h2>
+        <p class="section-subtitle section-subtitle--light">Stay informed, stay funded, and manage your FASTag account — all from one place.</p>
+        <div class="section-header-line section-header-line--light" aria-hidden="true"></div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-item reveal reveal-scale reveal-delay-1">
+          <div class="feature-icon-wrap" aria-hidden="true">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <path d="M8 10h.01M12 10h.01M16 10h.01"/>
+            </svg>
+          </div>
+          <h3>SMS Alerts</h3>
+          <p>Get instant SMS updates on your registered mobile for every credit and debit in your FASTag account — complete visibility on the go.</p>
+        </div>
+        <div class="feature-item reveal reveal-scale reveal-delay-2">
+          <div class="feature-icon-wrap" aria-hidden="true">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <path d="M2 10h20"/>
+              <path d="M6 15h.01M10 15h4"/>
+            </svg>
+          </div>
+          <h3>No Cash Required</h3>
+          <p>Skip the cash counter at toll booths — your FASTag deducts toll charges automatically, so you never need to carry change again.</p>
+        </div>
+        <div class="feature-item reveal reveal-scale reveal-delay-3">
+          <div class="feature-icon-wrap" aria-hidden="true">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3>Online Recharge</h3>
+          <p>Top up your tag balance anytime using debit card or net banking — quick, secure, and available whenever you need it.</p>
+        </div>
+        <div class="feature-item reveal reveal-scale reveal-delay-4">
+          <div class="feature-icon-wrap" aria-hidden="true">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8"/>
+              <path d="M12 17v4"/>
+              <path d="M7 8h2M11 8h6M7 12h10"/>
+            </svg>
+          </div>
+          <h3>Customer Web Portal</h3>
+          <p>Sign in to the FASTag customer portal to view statements, track transactions, and manage your account from any browser.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="landing-section landing-section--light landing-section--compact">
+    <div class="landing-container">
+      <div class="section-header reveal reveal-scale">
+        <span class="section-badge">NPCI Pricing</span>
+        <h2 class="section-title">Vehicle Class &amp; Recharge Rates</h2>
+        <p class="section-subtitle">Grouped by NPCI vehicle class — minimum recharge and refundable security deposit.</p>
+        <div class="section-header-line" aria-hidden="true"></div>
+      </div>
+      <div class="pricing-class-grid">
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-1">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">4</span>
+            <span class="pricing-class-label">Class 4</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Car / Jeep / Van (VC4)</span><span class="pricing-rate"><em>₹100</em><i>₹200</i></span></li>
+            <li><span class="pricing-vehicle">Tata Ace &amp; mini LCV (VC20)</span><span class="pricing-rate"><em>₹200</em><i>₹200</i></span></li>
+          </ul>
+        </article>
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-2">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">5</span>
+            <span class="pricing-class-label">Class 5</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Light Commercial 2-Axle (VC5)</span><span class="pricing-rate"><em>₹150</em><i>₹300</i></span></li>
+            <li><span class="pricing-vehicle">Mini-Bus (VC9)</span><span class="pricing-rate"><em>₹150</em><i>₹300</i></span></li>
+          </ul>
+        </article>
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-3">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">6</span>
+            <span class="pricing-class-label">Class 6</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Bus 3-Axle (VC8)</span><span class="pricing-rate"><em>₹300</em><i>₹400</i></span></li>
+            <li><span class="pricing-vehicle">Truck 3-Axle (VC11)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+          </ul>
+        </article>
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-4">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">7</span>
+            <span class="pricing-class-label">Class 7</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Bus 2-Axle (VC7)</span><span class="pricing-rate"><em>₹300</em><i>₹400</i></span></li>
+            <li><span class="pricing-vehicle">Truck 2-Axle (VC10)</span><span class="pricing-rate"><em>₹300</em><i>₹400</i></span></li>
+          </ul>
+        </article>
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-5">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">12</span>
+            <span class="pricing-class-label">Class 12</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Truck 4-Axle (VC12)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+            <li><span class="pricing-vehicle">Truck 5-Axle (VC13)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+            <li><span class="pricing-vehicle">Truck 6-Axle (VC14)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+          </ul>
+        </article>
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-6">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">15</span>
+            <span class="pricing-class-label">Class 15</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Truck Multi-Axle 7+ (VC15)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+          </ul>
+        </article>
+        <article class="pricing-class-card reveal reveal-scale reveal-delay-6">
+          <header class="pricing-class-header">
+            <span class="pricing-class-num">16</span>
+            <span class="pricing-class-label">Class 16</span>
+          </header>
+          <ul class="pricing-class-list">
+            <li><span class="pricing-vehicle">Earth Moving Machinery (VC16)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+            <li><span class="pricing-vehicle">Heavy Construction (VC17)</span><span class="pricing-rate"><em>₹300</em><i>₹500</i></span></li>
+          </ul>
+        </article>
+      </div>
+      <p class="pricing-legend reveal reveal-up">
+        <span><em>Min Recharge</em></span>
+        <span><i>Security Deposit</i></span>
+        · All amounts in INR · Deposit fully refundable on tag closure
+      </p>
+      <div class="pricing-table-cta reveal reveal-delay-2">
+        <a href="{{ url_for('main.signup') }}" class="btn btn--primary btn--large">Apply for FASTag</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="landing-section landing-section--dark">
+    <div class="landing-container">
+      <div class="contact-layout">
+        <div class="contact-info reveal reveal-left">
+          <span class="section-badge section-badge--orange">Get in Touch</span>
+          <h2 class="section-title section-title--light">Contact Us</h2>
+          <p class="section-subtitle section-subtitle--light">Have questions about FASTag registration, recharge, or tag replacement? We're here to help.</p>
+          <div class="contact-details">
+            <div class="contact-detail-item reveal reveal-delay-1">
+              <span class="contact-detail-icon">📍</span>
+              <div>
+                <strong>Head Office</strong>
+                <p>XYZ FASTag Centre, 123 Sample Avenue, Demo Block, XYZ City — 000000</p>
+              </div>
+            </div>
+            <div class="contact-detail-item reveal reveal-delay-2">
+              <span class="contact-detail-icon">📞</span>
+              <div>
+                <strong>Helpline</strong>
+                <p>1033 (Toll Free) · Mon–Sat, 8 AM – 8 PM</p>
+              </div>
+            </div>
+            <div class="contact-detail-item reveal reveal-delay-3">
+              <span class="contact-detail-icon">✉️</span>
+              <div>
+                <strong>Email</strong>
+                <p>support@xyz.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form glass-card-dark reveal reveal-right reveal-delay-2" id="contact-form" novalidate>
+          <div class="form-group">
+            <label class="form-label form-label--light" for="contact-name">Full Name</label>
+            <input type="text" id="contact-name" class="form-control form-control--dark no-icon" placeholder="e.g. Rahul Sharma" />
+          </div>
+          <div class="form-group">
+            <label class="form-label form-label--light" for="contact-email">Email Address</label>
+            <input type="email" id="contact-email" class="form-control form-control--dark no-icon" placeholder="e.g. rahul.sharma@example.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label form-label--light" for="contact-phone">Mobile Number</label>
+            <input type="tel" id="contact-phone" class="form-control form-control--dark no-icon" placeholder="e.g. 98765 43210" />
+          </div>
+          <div class="form-group">
+            <label class="form-label form-label--light" for="contact-subject">Subject</label>
+            <input type="text" id="contact-subject" class="form-control form-control--dark no-icon" placeholder="e.g. FASTag registration enquiry" />
+          </div>
+          <div class="form-group">
+            <label class="form-label form-label--light" for="contact-message">Message</label>
+            <textarea id="contact-message" class="form-control form-control--dark form-control--textarea no-icon" rows="4" placeholder="Hi, I would like to know more about FASTag registration and activation timelines. Please share the required documents list as well."></textarea>
+          </div>
+          <button type="button" class="btn btn--primary" id="contact-submit-btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+function scrollToHero() {
+  window.scrollTo(0, 0);
+  var hero = document.getElementById('hero');
+  if (hero) hero.scrollIntoView({ block: 'start' });
+}
+
+scrollToHero();
+window.addEventListener('load', scrollToHero);
+window.addEventListener('pageshow', function (e) {
+  if (e.persisted) scrollToHero();
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  scrollToHero();
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReduced) {
+    var reveals = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        } else {
+          entry.target.classList.remove('is-visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
+
+    reveals.forEach(function (el) { observer.observe(el); });
+
+    var sections = document.querySelectorAll('.landing-section, .landing-page');
+    var sectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('section-in-view');
+        } else {
+          entry.target.classList.remove('section-in-view');
+        }
+      });
+    }, { threshold: 0.18 });
+
+    sections.forEach(function (section) { sectionObserver.observe(section); });
+
+    var darkSections = document.querySelectorAll('.landing-section--dark');
+    window.addEventListener('scroll', function () {
+      darkSections.forEach(function (section) {
+        var rect = section.getBoundingClientRect();
+        var center = rect.top + rect.height / 2;
+        var viewport = window.innerHeight / 2;
+        var offset = (center - viewport) * 0.04;
+        section.style.setProperty('--parallax-y', offset + 'px');
+      });
+    }, { passive: true });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      el.classList.add('is-visible');
+    });
+    document.querySelectorAll('.landing-section, .landing-page').forEach(function (el) {
+      el.classList.add('section-in-view');
+    });
+  }
+
+  var contactBtn = document.getElementById('contact-submit-btn');
+  if (contactBtn) {
+    contactBtn.addEventListener('click', function () {
+      contactBtn.textContent = 'Message Sent ✓';
+      contactBtn.disabled = true;
+      contactBtn.style.opacity = '0.85';
+    });
+  }
+});
+</script>
 {% endblock %}
