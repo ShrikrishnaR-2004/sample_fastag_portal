@@ -235,8 +235,9 @@ def mpin_setup():
     if form.validate_on_submit():
         current_user.set_mpin(form.mpin.data)
         db.session.commit()
-        flash('MPIN set successfully! You can now sign in faster.', 'success')
-        return redirect(url_for('main.dashboard'))
+        logout_user()
+        flash('Successfully signed up!', 'success')
+        return redirect(url_for('main.login'))
     if form.errors and request.method == 'POST':
         for field, errs in form.errors.items():
             for err in errs:

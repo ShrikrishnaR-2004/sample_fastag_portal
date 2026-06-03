@@ -133,6 +133,8 @@ function initLogin() {
         if (attempts >= MAX_ATTEMPTS) {
           startLockout();
         }
+      } else {
+        form.submit();
       }
 
     });
@@ -458,7 +460,9 @@ function initOtpVerify() {
     const otp = Array.from(inputs).map(i => i.value).join('');
     if (otp.length === 6) {
 
-      window.location.href = '/signup';
+      const otpCombined = document.getElementById('otp-combined');
+      if (otpCombined) otpCombined.value = otp;
+      form.submit();
     } else {
       otpAttempts += 1;
       inputs.forEach(i => i.classList.add('error'));
@@ -652,7 +656,12 @@ function initMpinSetup() {
 
       mpinError.classList.remove('visible');
 
-      window.location.href = '/login';
+      const mpinCombined = document.getElementById('mpin-combined');
+      const mpinConfirmCombined = document.getElementById('mpin-confirm-combined');
+      if (mpinCombined) mpinCombined.value = mpin;
+      if (mpinConfirmCombined) mpinConfirmCombined.value = confirm;
+      
+      form.submit();
     });
   }
 }
