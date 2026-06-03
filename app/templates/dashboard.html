@@ -5,224 +5,567 @@
 
 {% block content %}
 <style>
-  /* Custom Dashboard Overrides */
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+  /* Global Dashboard Variables */
+  :root {
+    --db-bg: #f4f7fb;
+    --db-sidebar: rgba(255, 255, 255, 0.7);
+    --db-sidebar-active: #ffffff;
+    --db-accent: #3b82f6;
+    --db-accent-hover: #2563eb;
+    --db-text-main: #1e293b;
+    --db-text-muted: #64748b;
+    --db-card-bg: rgba(255, 255, 255, 0.85);
+    --db-border: rgba(226, 232, 240, 0.8);
+    --db-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    --db-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --grad-blue: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    --grad-green: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    --grad-orange: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+    --grad-purple: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%);
+  }
+
   .dashboard-page {
+    font-family: 'Outfit', sans-serif;
     display: flex;
     min-height: calc(100vh - 64px);
-    background: #F4F6F9;
+    background: var(--db-bg);
     margin: -40px -16px -60px; /* Counteract page-wrapper padding from base.html */
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Decorative Background Elements */
+  .dashboard-page::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .dashboard-page::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    left: 100px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* Sidebar styling */
   .db-sidebar {
-    width: 250px;
-    background: #1e2433;
-    color: #8898B8;
-    padding: 20px 0;
+    width: 260px;
+    background: var(--db-sidebar);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid var(--db-border);
+    padding: 30px 16px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    z-index: 10;
+    box-shadow: 1px 0 15px rgba(0,0,0,0.02);
   }
+  
+  .db-brand {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--db-text-main);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    padding: 0 12px;
+    letter-spacing: -0.5px;
+  }
+  .db-brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--grad-blue);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+  }
+
+  .db-nav-group {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #94a3b8;
+    margin: 20px 0 8px 12px;
+    letter-spacing: 1px;
+  }
+
   .db-nav-item {
     display: flex;
     align-items: center;
-    padding: 12px 24px;
-    color: #a4b4cb;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+    color: var(--db-text-muted);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    transition: all 0.2s;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .db-nav-item:hover, .db-nav-item.active {
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    border-left: 4px solid #D93025; /* Red accent for active */
+  .db-nav-item:hover {
+    background: rgba(241, 245, 249, 0.8);
+    color: var(--db-text-main);
+    transform: translateX(4px);
   }
-  .db-nav-item:not(.active) {
-    border-left: 4px solid transparent;
+  .db-nav-item.active {
+    background: var(--db-accent);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  .db-nav-item.active:hover {
+    transform: none;
   }
   .db-nav-icon {
-    margin-right: 12px;
-    font-size: 16px;
-    width: 20px;
+    margin-right: 14px;
+    font-size: 18px;
+    width: 24px;
     text-align: center;
+    opacity: 0.8;
+  }
+  .db-nav-item.active .db-nav-icon {
+    opacity: 1;
   }
 
   /* Main Area */
   .db-main {
     flex: 1;
-    padding: 24px 32px;
+    padding: 30px 40px;
     overflow-y: auto;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
   }
 
-  /* Dashboard Header overrides */
-  .db-custom-header {
+  /* Topbar */
+  .db-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-    background: #fff;
-    padding: 12px 24px;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    background: var(--db-card-bg);
+    backdrop-filter: blur(10px);
+    padding: 16px 24px;
+    border-radius: 20px;
+    border: 1px solid var(--db-border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+  }
+  
+  .db-header-left h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--db-text-main);
+    margin: 0 0 4px 0;
+  }
+  .db-header-left p {
+    font-size: 14px;
+    color: var(--db-text-muted);
+    margin: 0;
+  }
+
+  .db-header-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .db-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--db-text-muted);
+    background: rgba(241, 245, 249, 0.8);
+    padding: 8px 16px;
+    border-radius: 12px;
   }
   
   .upi-autopay-btn {
-    background: #0A1628;
-    color: #F4D03A;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #fcd34d;
     border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
+    border-radius: 12px;
+    padding: 10px 20px;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .upi-autopay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
   }
   
-  /* Top Stat Cards */
-  .stat-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-  .stat-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    position: relative;
-    overflow: hidden;
+  .user-profile {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 6px 12px 6px 6px;
+    border-radius: 30px;
+    transition: background 0.2s;
   }
-  .stat-card-border-top {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
+  .user-profile:hover {
+    background: rgba(241, 245, 249, 0.8);
   }
-  .stat-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .stat-value {
-    font-size: 18px;
-    font-weight: 700;
-    color: #0A1628;
-    margin-bottom: 4px;
-  }
-  .stat-label {
-    font-size: 10px;
-    font-weight: 600;
-    color: #7B8494;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .stat-icon {
-    width: 40px;
-    height: 40px;
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--grad-orange);
+    color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
   }
-
-  /* Specific Card Accents */
-  .c-cyan .stat-card-border-top { background: #00bcd4; }
-  .c-cyan .stat-value { color: #00838f; }
-  .c-cyan .stat-icon { background: #e0f7fa; color: #00bcd4; }
-
-  .c-green .stat-card-border-top { background: #4caf50; }
-  .c-green .stat-value { color: #2e7d32; }
-  .c-green .stat-icon { background: #e8f5e9; color: #4caf50; }
-
-  .c-yellow .stat-card-border-top { background: #ffb300; }
-  .c-yellow .stat-value { color: #f57f17; }
-  .c-yellow .stat-icon { background: #fff8e1; color: #ffb300; }
-
-  .c-red .stat-card-border-top { background: #e53935; }
-  .c-red .stat-value { color: #c62828; }
-  .c-red .stat-icon { background: #ffebee; color: #e53935; }
-
-  /* Vehicle Info Table Section */
-  .vehicle-section {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    overflow: hidden;
+  .user-info {
+    display: flex;
+    flex-direction: column;
   }
-  .vehicle-header {
-    background: #1e2433;
-    color: #fff;
-    padding: 12px 20px;
+  .user-name {
     font-size: 14px;
+    font-weight: 700;
+    color: var(--db-text-main);
+  }
+  .user-status {
+    font-size: 11px;
     font-weight: 600;
+    color: #10b981;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
   }
-  .vehicle-toolbar {
-    padding: 16px 20px;
+  .user-status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+  }
+
+  /* Grid Layouts */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+
+  /* Financial Cards Container */
+  .finance-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .finance-card {
+    border-radius: 20px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    box-shadow: var(--db-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .finance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--db-shadow-hover);
+  }
+  .fc-balance { background: var(--grad-blue); }
+  .fc-deposit { background: var(--grad-purple); }
+  .fc-monthly { background: var(--grad-green); }
+  .fc-threshold { background: var(--grad-orange); }
+
+  .finance-card::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+  }
+
+  .fc-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #EEF0F4;
+    margin-bottom: 24px;
   }
-  .btn-excel {
-    background: #fff;
-    border: 1.5px solid #C5CBD6;
-    color: #3D4455;
-    padding: 6px 12px;
-    border-radius: 6px;
+  .fc-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    backdrop-filter: blur(5px);
+  }
+  .fc-label {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+  }
+  .fc-value {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .fc-value span {
+    font-size: 20px;
+    font-weight: 600;
+    opacity: 0.8;
+  }
+
+  /* Profile Details Card */
+  .profile-details-card {
+    background: var(--db-card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--db-border);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: var(--db-shadow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .profile-details-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--db-text-main);
+    margin: 0 0 20px 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--db-border);
+  }
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .detail-row:last-child {
+    margin-bottom: 0;
+  }
+  .detail-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--db-accent);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .detail-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-label {
+    font-size: 12px;
+    color: var(--db-text-muted);
+    font-weight: 500;
+  }
+  .detail-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--db-text-main);
+  }
+
+  /* Vehicle Info Table Section */
+  .vehicle-section {
+    background: var(--db-card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--db-border);
+    border-radius: 20px;
+    box-shadow: var(--db-shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .vehicle-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--db-border);
+  }
+  .vehicle-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--db-text-main);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .vehicle-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-action {
+    background: white;
+    border: 1px solid var(--db-border);
+    color: var(--db-text-main);
+    padding: 8px 16px;
+    border-radius: 10px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+  .btn-action:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+  }
+  .search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
   }
   .search-box {
-    padding: 6px 12px;
-    border: 1.5px solid #C5CBD6;
-    border-radius: 6px;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--db-border);
+    border-radius: 10px;
     font-size: 13px;
-    width: 200px;
+    width: 220px;
+    background: rgba(255,255,255,0.5);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .search-box:focus {
+    outline: none;
+    border-color: var(--db-accent);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
   }
   .vehicle-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
   }
   .vehicle-table th {
-    background: #F9FAFB;
-    color: #7B8494;
-    font-size: 11px;
+    background: rgba(248, 250, 252, 0.6);
+    color: var(--db-text-muted);
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-    padding: 12px 20px;
+    padding: 16px 24px;
     text-align: left;
-    border-bottom: 1.5px solid #EEF0F4;
+    border-bottom: 1px solid var(--db-border);
+    letter-spacing: 0.5px;
   }
   .vehicle-table td {
-    padding: 16px 20px;
-    font-size: 13px;
-    color: #3D4455;
-    border-bottom: 1px solid #EEF0F4;
+    padding: 16px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--db-text-main);
+    border-bottom: 1px solid var(--db-border);
     vertical-align: middle;
+    transition: background 0.2s;
   }
-  .vehicle-table tbody tr:hover {
-    background: #F9FAFB;
+  .vehicle-table tbody tr:hover td {
+    background: rgba(248, 250, 252, 0.8);
+  }
+  .vehicle-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .plate-badge {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 14px;
+    color: #0f172a;
+    display: inline-block;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .status-active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+  .status-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #b45309;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+  }
+
+  .pass-icon {
+    font-size: 18px;
   }
 </style>
 
 <div class="dashboard-page">
   <!-- Sidebar -->
   <aside class="db-sidebar">
+    <div class="db-brand">
+      <div class="db-brand-icon">F</div>
+      FASTag Portal
+    </div>
+
+    <div class="db-nav-group">Main Menu</div>
     <a href="#" class="db-nav-item active">
-      <span class="db-nav-icon">⏱</span> Dashboard
+      <span class="db-nav-icon">📊</span> Dashboard
     </a>
     <a href="#" class="db-nav-item">
       <span class="db-nav-icon">🎫</span> Annual Pass
@@ -231,11 +574,13 @@
       <span class="db-nav-icon">👤</span> My Profile
     </a>
     <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">₹</span> Wallet Recharge
+      <span class="db-nav-icon">💳</span> Wallet Recharge
     </a>
     <a href="#" class="db-nav-item">
       <span class="db-nav-icon">🚗</span> Add Tag
     </a>
+    
+    <div class="db-nav-group">Services</div>
     <a href="#" class="db-nav-item">
       <span class="db-nav-icon">📝</span> VRN Update
     </a>
@@ -245,216 +590,197 @@
     <a href="#" class="db-nav-item">
       <span class="db-nav-icon">🔄</span> Replacement
     </a>
+    
+    <div class="db-nav-group">Support & History</div>
     <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">💬</span> Raise Dispute Request
+      <span class="db-nav-icon">💸</span> Transactions
     </a>
     <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">✖</span> Request for FASTag Closure
+      <span class="db-nav-icon">📅</span> Statements
     </a>
     <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">📊</span> Transaction History
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">📅</span> Monthly Statement
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">🔗</span> Link CASA
+      <span class="db-nav-icon">⚠️</span> Raise Dispute
     </a>
   </aside>
 
   <!-- Main Content -->
   <main class="db-main">
     
-    <!-- Custom Topbar replacing header features -->
-    <div class="db-custom-header">
-      <div style="display: flex; align-items: center; gap: 12px;">
-         <span style="font-weight: 700; color: #0A1628; display: flex; align-items: center; gap: 8px;">
-           <span style="color: #D93025; font-size: 18px;">🚗</span> FASTag Customer Portal
-         </span>
-         <span class="db-badge db-badge--green" style="font-size: 10px; padding: 4px 8px;">• ACTIVE</span>
+    <!-- Topbar -->
+    <header class="db-header">
+      <div class="db-header-left">
+        <h1>Welcome back, {{ user.full_name.split(' ')[0] }}! 👋</h1>
+        <p>Here's an overview of your FASTag account today.</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 20px;">
-        <span style="color: #7B8494; font-size: 13px; font-weight: 600;">
-          📅 {{ now|default('Wed, 3 Jun 2026') }}
-        </span>
-        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #0A1628;">
-          <div style="width: 24px; height: 24px; background: #FF6B00; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">
-            {{ user.full_name[0] | upper }}
-          </div>
-          {{ user.full_name.split(' ')[0] }} ▾
+      <div class="db-header-right">
+        <div class="db-date">
+          <span>📅</span> {{ now|default('Wed, 3 Jun 2026') }}
         </div>
         <button class="upi-autopay-btn">
-          ₹ UPI AUTOPAY
+          <span>⚡</span> Set UPI AutoPay
         </button>
+        <div class="user-profile">
+          <div class="user-avatar">{{ user.full_name[0] | upper }}</div>
+          <div class="user-info">
+            <span class="user-name">{{ user.full_name.split(' ')[0] }}</span>
+            <span class="user-status">Active</span>
+          </div>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <!-- Row 1 Cards -->
-    <div class="stat-grid">
-      <div class="stat-card c-cyan">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ user.full_name }}</div>
-          <div class="stat-label">Name</div>
+    <!-- Overview section: Financials + Profile -->
+    <div class="overview-grid">
+      
+      <!-- Financial Cards (2x2) -->
+      <div class="finance-cards">
+        <div class="finance-card fc-balance">
+          <div class="fc-header">
+            <div class="fc-label">Wallet Balance</div>
+            <div class="fc-icon">💳</div>
+          </div>
+          <div class="fc-value"><span>₹</span>{{ stats.wallet_balance }}</div>
         </div>
-        <div class="stat-icon">🪪</div>
-      </div>
-      <div class="stat-card c-green">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ user.phone }}</div>
-          <div class="stat-label">Mobile No</div>
+        
+        <div class="finance-card fc-deposit">
+          <div class="fc-header">
+            <div class="fc-label">Security Deposit</div>
+            <div class="fc-icon">🛡️</div>
+          </div>
+          <div class="fc-value"><span>₹</span>{{ stats.security_deposit }}</div>
         </div>
-        <div class="stat-icon">📞</div>
-      </div>
-      <div class="stat-card c-yellow">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ user.email }}</div>
-          <div class="stat-label">Email Address</div>
+        
+        <div class="finance-card fc-monthly">
+          <div class="fc-header">
+            <div class="fc-label">Monthly Limit</div>
+            <div class="fc-icon">📈</div>
+          </div>
+          <div class="fc-value"><span>₹</span>{{ stats.monthly_limit }}</div>
         </div>
-        <div class="stat-icon">@</div>
-      </div>
-      <div class="stat-card c-red">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ stats.no_of_tags }}</div>
-          <div class="stat-label">No. of Tags</div>
+        
+        <div class="finance-card fc-threshold">
+          <div class="fc-header">
+            <div class="fc-label">Threshold Limit</div>
+            <div class="fc-icon">📉</div>
+          </div>
+          <div class="fc-value"><span>₹</span>{{ stats.threshold_limit }}</div>
         </div>
-        <div class="stat-icon">🏷️</div>
       </div>
-    </div>
 
-    <!-- Row 2 Cards -->
-    <div class="stat-grid">
-      <div class="stat-card c-yellow">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ stats.threshold_limit }}</div>
-          <div class="stat-label">Threshold Limit</div>
+      <!-- Quick Profile Card -->
+      <div class="profile-details-card">
+        <h3>Account Details</h3>
+        <div class="detail-row">
+          <div class="detail-icon">👤</div>
+          <div class="detail-info">
+            <span class="detail-label">Full Name</span>
+            <span class="detail-value">{{ user.full_name }}</span>
+          </div>
         </div>
-        <div class="stat-icon">⏱</div>
-      </div>
-      <div class="stat-card c-cyan">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ stats.monthly_limit }}</div>
-          <div class="stat-label">Monthly Limit</div>
+        <div class="detail-row">
+          <div class="detail-icon">📱</div>
+          <div class="detail-info">
+            <span class="detail-label">Mobile Number</span>
+            <span class="detail-value">+91 {{ user.phone }}</span>
+          </div>
         </div>
-        <div class="stat-icon">🗓</div>
-      </div>
-      <div class="stat-card c-green">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ stats.wallet_balance }}</div>
-          <div class="stat-label">Wallet Balance</div>
+        <div class="detail-row">
+          <div class="detail-icon">✉️</div>
+          <div class="detail-info">
+            <span class="detail-label">Email Address</span>
+            <span class="detail-value">{{ user.email }}</span>
+          </div>
         </div>
-        <div class="stat-icon">💵</div>
-      </div>
-      <div class="stat-card c-red">
-        <div class="stat-card-border-top"></div>
-        <div class="stat-info">
-          <div class="stat-value">{{ stats.security_deposit }}</div>
-          <div class="stat-label">Security Deposit</div>
+        <div class="detail-row">
+          <div class="detail-icon">🏷️</div>
+          <div class="detail-info">
+            <span class="detail-label">Total Tags</span>
+            <span class="detail-value">{{ stats.no_of_tags }} Registered</span>
+          </div>
         </div>
-        <div class="stat-icon">🛡</div>
       </div>
+
     </div>
 
     <!-- Vehicle Info Section -->
     <div class="vehicle-section">
       <div class="vehicle-header">
-        🚗 Vehicle Info
-      </div>
-      <div class="vehicle-toolbar">
-        <button class="btn-excel">
-          <span style="color: #217346; font-weight: bold;">x</span> EXCEL
-        </button>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 12px; color: #7B8494;">Search</span>
-          <input type="text" class="search-box" />
+        <h2><span>🚘</span> Registered Vehicles</h2>
+        <div class="vehicle-actions">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-box" placeholder="Search vehicles or tags..." />
+          </div>
+          <button class="btn-action" style="color: #047857; border-color: #a7f3d0;">
+            <span>📥</span> Export CSV
+          </button>
         </div>
       </div>
       
-      <table class="vehicle-table">
-        <thead>
-          <tr>
-            <th>Vehicle Number</th>
-            <th>Tag ID</th>
-            <th>Vehicle Class</th>
-            <th>Commercial Vehicle</th>
-            <th>Joining Fee</th>
-            <th>Security Deposit</th>
-            <th>Minimum Recharge Amount</th>
-            <th>Status</th>
-            <th>Annual Pass</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for v in vehicles %}
-          <tr>
-            <td style="font-weight: 600; color: #1A2035;">{{ v.vehicle_number }}</td>
-            <td style="font-family: monospace; font-size: 12px; color: #7B8494;">{{ v.tag_id or 'Pending' }}</td>
-            <td>{{ v.vehicle_class }}</td>
-            <td>{{ 'YES' if v.is_commercial else 'NO' }}</td>
-            <td>{{ v.joining_fee }}</td>
-            <td>200.00</td>
-            <td>{{ v.min_recharge }}</td>
-            <td>
-              {% if v.status == 'Active' %}
-                <span class="db-badge db-badge--green">{{ v.status }}</span>
-              {% else %}
-                <span class="db-badge db-badge--gray">{{ v.status }}</span>
-              {% endif %}
-            </td>
-            <td style="font-size: 16px; color: #7B8494;">{{ '✅' if v.has_annual_pass else '🚫' }}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="9" style="text-align: center; color: #7B8494; padding: 40px;">
-              No vehicles found.
-            </td>
-          </tr>
-          {% endfor %}
-          
-          <!-- Adding some extra hardcoded mocked rows to match the image density if user has none -->
-          {% if not vehicles %}
-          <tr>
-            <td style="font-weight: 600; color: #1A2035;">FSSFSR</td>
-            <td style="font-family: monospace; font-size: 12px; color: #7B8494;">34161FA8203289B60200A9E0</td>
-            <td>Tata Ace and similar light Commercial vehicle(VC20)</td>
-            <td>NO</td>
-            <td>100.00</td>
-            <td>200.00</td>
-            <td>200.00</td>
-            <td>Low Balance List</td>
-            <td style="font-size: 16px; color: #7B8494;">🚫</td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600; color: #1A2035;">TN07YU8934</td>
-            <td style="font-family: monospace; font-size: 12px; color: #7B8494;"></td>
-            <td>Car/Jeep/Van</td>
-            <td>YES</td>
-            <td>100.00</td>
-            <td>200.00</td>
-            <td>200.00</td>
-            <td>Not yet Approved</td>
-            <td style="font-size: 16px; color: #7B8494;">🚫</td>
-          </tr>
-          <tr>
-            <td style="font-weight: 600; color: #1A2035;">TN09BM0099</td>
-            <td style="font-family: monospace; font-size: 12px; color: #7B8494;">34161FA8203289B602009F20</td>
-            <td>Car/Jeep/Van(VC4)</td>
-            <td>YES</td>
-            <td>100.00</td>
-            <td>200.00</td>
-            <td>100.00</td>
-            <td><span class="db-badge db-badge--green">Active</span></td>
-            <td style="font-size: 16px; color: #7B8494;">🚫</td>
-          </tr>
-          {% endif %}
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table class="vehicle-table">
+          <thead>
+            <tr>
+              <th>Vehicle Number</th>
+              <th>Tag ID</th>
+              <th>Vehicle Class</th>
+              <th>Commercial</th>
+              <th>Status</th>
+              <th>Annual Pass</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for v in vehicles %}
+            <tr>
+              <td><span class="plate-badge">{{ v.vehicle_number }}</span></td>
+              <td style="font-family: monospace; color: var(--db-text-muted);">{{ v.tag_id or 'Processing...' }}</td>
+              <td>{{ v.vehicle_class }}</td>
+              <td>
+                <span style="color: {{ '#10b981' if v.is_commercial else '#94a3b8' }}; font-weight: 700;">
+                  {{ 'YES' if v.is_commercial else 'NO' }}
+                </span>
+              </td>
+              <td>
+                {% if v.status == 'Active' %}
+                  <span class="status-pill status-active">Active</span>
+                {% else %}
+                  <span class="status-pill status-pending">{{ v.status }}</span>
+                {% endif %}
+              </td>
+              <td class="pass-icon">{{ '✅' if v.has_annual_pass else '🚫' }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--db-text-muted); padding: 60px 20px;">
+                <div style="font-size: 32px; margin-bottom: 12px;">🚗</div>
+                <div style="font-weight: 600;">No vehicles found.</div>
+                <div style="font-size: 13px;">Add a FASTag to see your vehicles here.</div>
+              </td>
+            </tr>
+            {% endfor %}
+            
+            <!-- Mocked rows for empty state demo purposes -->
+            {% if not vehicles %}
+            <tr>
+              <td><span class="plate-badge">TN07YU8934</span></td>
+              <td style="font-family: monospace; color: var(--db-text-muted);">34161FA8203289B60200A9E0</td>
+              <td>Car/Jeep/Van(VC4)</td>
+              <td><span style="color: #94a3b8; font-weight: 700;">NO</span></td>
+              <td><span class="status-pill status-active">Active</span></td>
+              <td class="pass-icon">🚫</td>
+            </tr>
+            <tr>
+              <td><span class="plate-badge">MH12DE1433</span></td>
+              <td style="font-family: monospace; color: var(--db-text-muted);">Processing...</td>
+              <td>Light Commercial(VC20)</td>
+              <td><span style="color: #10b981; font-weight: 700;">YES</span></td>
+              <td><span class="status-pill status-pending">Pending</span></td>
+              <td class="pass-icon">✅</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 </div>
