@@ -5,795 +5,941 @@
 
 {% block content %}
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-  /* Global Dashboard Variables */
+  /* =============================================
+     DESIGN SYSTEM TOKENS
+     ============================================= */
   :root {
-    --db-bg: #f4f7fb;
-    --db-sidebar: rgba(255, 255, 255, 0.7);
-    --db-sidebar-active: #ffffff;
-    --db-accent: #3b82f6;
-    --db-accent-hover: #2563eb;
-    --db-text-main: #1e293b;
-    --db-text-muted: #64748b;
-    --db-card-bg: rgba(255, 255, 255, 0.85);
-    --db-border: rgba(226, 232, 240, 0.8);
-    --db-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-    --db-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-    --grad-blue: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    --grad-green: linear-gradient(135deg, #10b981 0%, #047857 100%);
-    --grad-orange: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
-    --grad-purple: linear-gradient(135deg, #8b5cf6 0%, #5b21b6 100%);
+    /* Core Palette */
+    --c-bg:           #F0F2F7;
+    --c-sidebar:      #0A1628;
+    --c-sidebar-border: rgba(255,255,255,0.07);
+    --c-card:         #FFFFFF;
+    --c-card-border:  #E2E8F0;
+    --c-card-shadow:  0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+
+    /* Text */
+    --c-text-primary: #0F1B2D;
+    --c-text-secondary: #4A5568;
+    --c-text-muted:   #8898B8;
+    --c-text-inverted:#FFFFFF;
+    --c-text-inv-muted: rgba(255,255,255,0.55);
+
+    /* Brand / Accent */
+    --c-brand:        #FF6B00;
+    --c-brand-light:  #FFF3E8;
+    --c-brand-dark:   #CC5500;
+
+    /* Status */
+    --c-green:        #10B981;
+    --c-green-bg:     rgba(16,185,129,0.1);
+    --c-green-border: rgba(16,185,129,0.25);
+    --c-amber:        #F59E0B;
+    --c-amber-bg:     rgba(245,158,11,0.1);
+    --c-amber-border: rgba(245,158,11,0.25);
+    --c-red:          #EF4444;
+    --c-red-bg:       rgba(239,68,68,0.1);
+    --c-red-border:   rgba(239,68,68,0.2);
+    --c-blue:         #3B82F6;
+    --c-blue-bg:      rgba(59,130,246,0.1);
+    --c-blue-border:  rgba(59,130,246,0.2);
+    --c-purple:       #8B5CF6;
+    --c-purple-bg:    rgba(139,92,246,0.1);
+
+    /* Stat Card Gradients */
+    --grad-wallet:    linear-gradient(135deg, #3B82F6, #1D4ED8);
+    --grad-deposit:   linear-gradient(135deg, #8B5CF6, #5B21B6);
+    --grad-monthly:   linear-gradient(135deg, #10B981, #047857);
+    --grad-threshold: linear-gradient(135deg, #F59E0B, #B45309);
   }
 
-  /* Fix any gaps in main content wrapper */
+  /* =============================================
+     LAYOUT RESET & STRUCTURE
+     ============================================= */
   #main-content {
     padding: 0 !important;
     margin: 0 !important;
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
   }
 
-  .dashboard-page {
-    font-family: 'Outfit', sans-serif;
+  .db-layout {
+    font-family: 'Inter', sans-serif;
     display: flex;
     flex: 1;
     min-height: calc(100vh - 64px);
-    background: var(--db-bg);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  /* Decorative Background Elements */
-  .dashboard-page::before {
-    content: '';
-    position: absolute;
-    top: -100px;
-    right: -100px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .dashboard-page::after {
-    content: '';
-    position: absolute;
-    bottom: -150px;
-    left: 100px;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(16,185,129,0) 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
+    background: var(--c-bg);
   }
 
-  /* Sidebar styling (Redesigned Dark Theme) */
+  /* =============================================
+     SIDEBAR
+     ============================================= */
   .db-sidebar {
-    width: 260px;
-    background: #0A1628; /* Match base.html site-header */
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 30px 16px;
+    width: 252px;
     flex-shrink: 0;
+    background: var(--c-sidebar);
     display: flex;
     flex-direction: column;
-    z-index: 10;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+    padding: 24px 12px;
+    overflow-y: auto;
   }
-  
-  .db-brand {
-    font-size: 22px;
-    font-weight: 800;
-    color: #ffffff;
+
+  .db-sidebar-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 40px;
-    padding: 0 12px;
+    gap: 10px;
+    padding: 4px 12px 28px;
+    border-bottom: 1px solid var(--c-sidebar-border);
+    margin-bottom: 20px;
+  }
+  .db-sidebar-brand-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #FF6B00, #FF8C3A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 900;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(255,107,0,0.4);
     letter-spacing: -0.5px;
   }
-  .db-brand-icon {
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, #FF6B00 0%, #FF8C3A 100%);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(255, 107, 0, 0.4);
-  }
-
-  .db-nav-group {
-    font-size: 11px;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: #8898B8;
-    margin: 20px 0 8px 12px;
-    letter-spacing: 1px;
-  }
-
-  .db-nav-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 14px;
-    margin-bottom: 4px;
-    color: #C5CBD6;
-    text-decoration: none;
+  .db-sidebar-brand-text {
     font-size: 15px;
-    font-weight: 500;
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .db-nav-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-    transform: translateX(4px);
-  }
-  .db-nav-item.active {
-    background: linear-gradient(135deg, #FF6B00 0%, #E55E00 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
-  }
-  .db-nav-item.active:hover {
-    transform: none;
-  }
-  .db-nav-icon {
-    margin-right: 14px;
-    font-size: 18px;
-    width: 24px;
-    text-align: center;
-    opacity: 0.8;
-  }
-  .db-nav-item.active .db-nav-icon {
-    opacity: 1;
-  }
-
-  /* Main Area */
-  .db-main {
-    flex: 1;
-    padding: 30px 40px;
-    overflow-y: auto;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  /* Topbar */
-  .db-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--db-card-bg);
-    backdrop-filter: blur(10px);
-    padding: 16px 24px;
-    border-radius: 20px;
-    border: 1px solid var(--db-border);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-  }
-  
-  .db-header-left h1 {
-    font-size: 24px;
     font-weight: 700;
-    color: var(--db-text-main);
-    margin: 0 0 4px 0;
+    color: var(--c-text-inverted);
+    letter-spacing: -0.3px;
+    line-height: 1.2;
   }
-  .db-header-left p {
-    font-size: 14px;
-    color: var(--db-text-muted);
-    margin: 0;
+  .db-sidebar-brand-sub {
+    font-size: 11px;
+    color: var(--c-text-inv-muted);
+    letter-spacing: 0.3px;
   }
 
-  .db-header-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  .db-nav-section {
+    margin-bottom: 4px;
   }
-  
-  .db-date {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--db-text-muted);
-    background: rgba(241, 245, 249, 0.8);
-    padding: 8px 16px;
-    border-radius: 12px;
-  }
-  
-  .upi-autopay-btn {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    color: #fcd34d;
-    border: none;
-    border-radius: 12px;
-    padding: 10px 20px;
+  .db-nav-section-label {
+    font-size: 10px;
     font-weight: 700;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
-    transition: transform 0.2s, box-shadow 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--c-text-inv-muted);
+    padding: 16px 14px 6px;
   }
-  .upi-autopay-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
-  }
-  
-  .user-profile {
+
+  .db-nav-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    cursor: pointer;
-    padding: 6px 12px 6px 6px;
-    border-radius: 30px;
-    transition: background 0.2s;
-  }
-  .user-profile:hover {
-    background: rgba(241, 245, 249, 0.8);
-  }
-  .user-avatar {
-    width: 36px;
-    height: 36px;
-    background: var(--grad-orange);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
-  }
-  .user-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .user-name {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--db-text-main);
-  }
-  .user-status {
-    font-size: 11px;
-    font-weight: 600;
-    color: #10b981;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .user-status::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: #10b981;
-    border-radius: 50%;
-  }
-
-  /* Grid Layouts */
-  .overview-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-  }
-
-  /* Financial Cards Container */
-  .finance-cards {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  .finance-card {
-    border-radius: 20px;
-    padding: 24px;
-    position: relative;
-    overflow: hidden;
-    color: white;
-    box-shadow: var(--db-shadow);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .finance-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--db-shadow-hover);
-  }
-  .fc-balance { background: var(--grad-blue); }
-  .fc-deposit { background: var(--grad-purple); }
-  .fc-monthly { background: var(--grad-green); }
-  .fc-threshold { background: var(--grad-orange); }
-
-  .finance-card::after {
-    content: '';
-    position: absolute;
-    right: -20px;
-    bottom: -20px;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
-    border-radius: 50%;
-  }
-
-  .fc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-  .fc-icon {
-    width: 44px;
-    height: 44px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    backdrop-filter: blur(5px);
-  }
-  .fc-label {
-    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    margin-bottom: 2px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13.5px;
     font-weight: 500;
-    opacity: 0.9;
-    letter-spacing: 0.5px;
+    transition: background 0.18s, color 0.18s, transform 0.18s;
   }
-  .fc-value {
-    font-size: 32px;
-    font-weight: 800;
-    letter-spacing: -1px;
+  .db-nav-link:hover {
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.95);
+    text-decoration: none;
+    transform: translateX(2px);
   }
-  .fc-value span {
-    font-size: 20px;
+  .db-nav-link.active {
+    background: rgba(255,107,0,0.15);
+    color: #FF8C3A;
     font-weight: 600;
-    opacity: 0.8;
   }
-
-  /* Profile Details Card */
-  .profile-details-card {
-    background: var(--db-card-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--db-border);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: var(--db-shadow);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .profile-details-card h3 {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--db-text-main);
-    margin: 0 0 20px 0;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--db-border);
-  }
-  .detail-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .detail-row:last-child {
-    margin-bottom: 0;
-  }
-  .detail-icon {
-    width: 36px;
-    height: 36px;
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--db-accent);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-  }
-  .detail-info {
-    display: flex;
-    flex-direction: column;
-  }
-  .detail-label {
-    font-size: 12px;
-    color: var(--db-text-muted);
-    font-weight: 500;
-  }
-  .detail-value {
+  .db-nav-link.active:hover { transform: none; }
+  .db-nav-link-icon {
+    width: 18px;
+    text-align: center;
     font-size: 15px;
-    font-weight: 600;
-    color: var(--db-text-main);
+    flex-shrink: 0;
+  }
+  .db-nav-link.logout {
+    color: rgba(239,68,68,0.7);
+  }
+  .db-nav-link.logout:hover {
+    background: rgba(239,68,68,0.1);
+    color: #EF4444;
+    transform: none;
   }
 
-  /* Vehicle Info Table Section */
-  .vehicle-section {
-    background: var(--db-card-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--db-border);
-    border-radius: 20px;
-    box-shadow: var(--db-shadow);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .vehicle-header {
-    padding: 20px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--db-border);
-  }
-  .vehicle-header h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--db-text-main);
-    margin: 0;
+  .db-sidebar-spacer { flex: 1; }
+
+  .db-sidebar-user {
+    margin: 4px 0 0;
+    padding: 14px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
     display: flex;
     align-items: center;
     gap: 10px;
   }
-  
-  .vehicle-actions {
+  .db-sidebar-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF6B00, #FF8C3A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .db-sidebar-user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .db-sidebar-user-status {
+    font-size: 11px;
+    color: var(--c-green);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .db-sidebar-user-status::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-green);
+  }
+
+  /* =============================================
+     MAIN AREA
+     ============================================= */
+  .db-main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  /* Topbar */
+  .db-topbar {
+    background: var(--c-card);
+    border-bottom: 1px solid var(--c-card-border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+  .db-topbar-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--c-text-primary);
+  }
+  .db-topbar-sub {
+    font-size: 13px;
+    color: var(--c-text-muted);
+    margin-top: 1px;
+  }
+  .db-topbar-right {
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .btn-action {
-    background: white;
-    border: 1px solid var(--db-border);
-    color: var(--db-text-main);
-    padding: 8px 16px;
-    border-radius: 10px;
+  .db-date-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--c-bg);
+    border: 1px solid var(--c-card-border);
+    border-radius: 8px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
+    color: var(--c-text-secondary);
+  }
+  .upi-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    background: var(--c-text-primary);
+    color: #fbbf24;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
     cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .upi-btn:hover {
+    background: #1e293b;
+    transform: translateY(-1px);
+  }
+
+  /* =============================================
+     PAGE CONTENT
+     ============================================= */
+  .db-content {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+  }
+
+  /* Stat Cards Row */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .stat-card {
+    border-radius: 14px;
+    padding: 22px 20px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.16);
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    right: -24px;
+    top: -24px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    pointer-events: none;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    bottom: -30px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    pointer-events: none;
+  }
+  .stat-card-g1 { background: var(--grad-wallet); }
+  .stat-card-g2 { background: var(--grad-deposit); }
+  .stat-card-g3 { background: var(--grad-monthly); }
+  .stat-card-g4 { background: var(--grad-threshold); }
+
+  .stat-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .stat-card-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    opacity: 0.85;
+    letter-spacing: 0.3px;
+  }
+  .stat-card-icon {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    backdrop-filter: blur(4px);
+  }
+  .stat-card-value {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.8px;
+    line-height: 1;
+  }
+  .stat-card-value-prefix {
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0.8;
+    margin-right: 1px;
+  }
+
+  /* Info Row (Profile + Quick Actions) */
+  .info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* Card Base */
+  .db-card {
+    background: var(--c-card);
+    border: 1px solid var(--c-card-border);
+    border-radius: 14px;
+    box-shadow: var(--c-card-shadow);
+  }
+  .db-card-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--c-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .db-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--c-text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
-  .btn-action:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-    transform: translateY(-1px);
-  }
-  .search-wrapper {
-    position: relative;
+  .db-card-title-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     display: flex;
     align-items: center;
-  }
-  .search-icon {
-    position: absolute;
-    left: 12px;
-    color: #94a3b8;
-  }
-  .search-box {
-    padding: 8px 12px 8px 36px;
-    border: 1px solid var(--db-border);
-    border-radius: 10px;
+    justify-content: center;
     font-size: 13px;
-    width: 220px;
-    background: rgba(255,255,255,0.5);
-    transition: all 0.2s;
-    font-family: inherit;
+    background: var(--c-brand-light);
   }
-  .search-box:focus {
-    outline: none;
-    border-color: var(--db-accent);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-  
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-  }
-  .vehicle-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-  }
-  .vehicle-table th {
-    background: rgba(248, 250, 252, 0.6);
-    color: var(--db-text-muted);
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    padding: 16px 24px;
-    text-align: left;
-    border-bottom: 1px solid var(--db-border);
-    letter-spacing: 0.5px;
-  }
-  .vehicle-table td {
-    padding: 16px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--db-text-main);
-    border-bottom: 1px solid var(--db-border);
-    vertical-align: middle;
-    transition: background 0.2s;
-  }
-  .vehicle-table tbody tr:hover td {
-    background: rgba(248, 250, 252, 0.8);
-  }
-  .vehicle-table tbody tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .plate-badge {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-family: monospace;
-    font-weight: 700;
-    font-size: 14px;
-    color: #0f172a;
-    display: inline-block;
+  .db-card-body {
+    padding: 20px;
   }
 
+  /* Account Details Card */
+  .account-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .account-row:last-child { border-bottom: none; }
+  .account-row-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--c-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .account-row-label {
+    font-size: 11.5px;
+    color: var(--c-text-muted);
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  .account-row-value {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--c-text-primary);
+  }
+
+  /* Tags Badge Card */
+  .tags-card-body {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .tags-big-number {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--c-text-primary);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .tags-desc {
+    font-size: 14px;
+    color: var(--c-text-secondary);
+    line-height: 1.5;
+  }
+  .tags-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--c-green-bg);
+    border: 1px solid var(--c-green-border);
+    color: #047857;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tags-badge-pill::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-green);
+  }
+
+  /* Vehicles Table */
+  .table-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .table-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    background: var(--c-bg);
+    border: 1px solid var(--c-card-border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--c-text-muted);
+  }
+  .table-search input {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: var(--c-text-primary);
+    font-family: inherit;
+    outline: none;
+    width: 180px;
+  }
+  .table-search input::placeholder { color: var(--c-text-muted); }
+  .table-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--c-card);
+    border: 1px solid var(--c-card-border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .table-btn:hover {
+    background: var(--c-bg);
+    border-color: #cbd5e1;
+  }
+
+  .vehicles-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .vehicles-table th {
+    background: #fafbfc;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--c-text-muted);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--c-card-border);
+  }
+  .vehicles-table td {
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: var(--c-text-primary);
+    font-weight: 500;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+  .vehicles-table tbody tr:last-child td { border-bottom: none; }
+  .vehicles-table tbody tr:hover td { background: #fafbfc; }
+
+  .vrn-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--c-text-primary);
+    letter-spacing: 0.5px;
+  }
+  .tag-id-text {
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    color: var(--c-text-muted);
+    letter-spacing: 0.5px;
+  }
   .status-pill {
     display: inline-flex;
     align-items: center;
-    padding: 4px 12px;
+    gap: 5px;
+    padding: 3px 10px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.4px;
   }
-  .status-active {
-    background: rgba(16, 185, 129, 0.1);
+  .status-pill::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+  .s-active {
+    background: var(--c-green-bg);
+    border: 1px solid var(--c-green-border);
     color: #047857;
-    border: 1px solid rgba(16, 185, 129, 0.2);
   }
-  .status-pending {
-    background: rgba(245, 158, 11, 0.1);
-    color: #b45309;
-    border: 1px solid rgba(245, 158, 11, 0.2);
+  .s-active::before { background: var(--c-green); }
+  .s-pending {
+    background: var(--c-amber-bg);
+    border: 1px solid var(--c-amber-border);
+    color: #92400e;
   }
-
-  .pass-icon {
-    font-size: 18px;
+  .s-pending::before { background: var(--c-amber); }
+  .pass-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
   }
+  .pass-yes {
+    background: var(--c-green-bg);
+    color: #047857;
+  }
+  .pass-no {
+    background: #f1f5f9;
+    color: var(--c-text-muted);
+  }
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--c-text-muted);
+  }
+  .empty-state-icon { font-size: 36px; margin-bottom: 10px; }
+  .empty-state-title { font-size: 15px; font-weight: 600; color: var(--c-text-primary); margin-bottom: 4px; }
+  .empty-state-sub { font-size: 13px; }
 </style>
 
-<div class="dashboard-page">
-  <!-- Sidebar -->
+<div class="db-layout">
+
+  <!-- ==============================
+       SIDEBAR
+       ============================== -->
   <aside class="db-sidebar">
-    <div class="db-brand">
-      <div class="db-brand-icon">F</div>
-      FASTag Portal
+    <div class="db-sidebar-brand">
+      <div class="db-sidebar-brand-icon">FT</div>
+      <div>
+        <div class="db-sidebar-brand-text">FASTag Portal</div>
+        <div class="db-sidebar-brand-sub">NHAI · Powered by NPCI</div>
+      </div>
     </div>
 
-    <div class="db-nav-group">Main Menu</div>
-    <a href="#" class="db-nav-item active">
-      <span class="db-nav-icon">📊</span> Dashboard
+    <nav class="db-nav-section">
+      <div class="db-nav-section-label">Main</div>
+      <a href="#" class="db-nav-link active">
+        <span class="db-nav-link-icon">📊</span> Dashboard
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">🎫</span> Annual Pass
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">💳</span> Wallet Recharge
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">🚗</span> Add Tag
+      </a>
+    </nav>
+
+    <nav class="db-nav-section">
+      <div class="db-nav-section-label">Services</div>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">👤</span> My Profile
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">📝</span> VRN Update
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">📄</span> Upload KYC
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">🔄</span> Replacement
+      </a>
+    </nav>
+
+    <nav class="db-nav-section">
+      <div class="db-nav-section-label">History</div>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">💸</span> Transactions
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">📅</span> Statements
+      </a>
+      <a href="#" class="db-nav-link">
+        <span class="db-nav-link-icon">⚠️</span> Raise Dispute
+      </a>
+    </nav>
+
+    <div class="db-sidebar-spacer"></div>
+
+    <a href="{{ url_for('main.logout') }}" class="db-nav-link logout" style="margin-bottom: 12px;">
+      <span class="db-nav-link-icon">🚪</span> Logout
     </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">🎫</span> Annual Pass
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">👤</span> My Profile
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">💳</span> Wallet Recharge
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">🚗</span> Add Tag
-    </a>
-    
-    <div class="db-nav-group">Services</div>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">📝</span> VRN Update
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">📄</span> Upload KYC
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">🔄</span> Replacement
-    </a>
-    
-    <div class="db-nav-group">Support & History</div>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">💸</span> Transactions
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">📅</span> Statements
-    </a>
-    <a href="#" class="db-nav-item">
-      <span class="db-nav-icon">⚠️</span> Raise Dispute
-    </a>
-    
-    <div class="db-nav-group">Account</div>
-    <a href="{{ url_for('main.logout') }}" class="db-nav-item" style="color: #ef4444; margin-top: 10px;">
-      <span class="db-nav-icon">🚪</span> Logout
-    </a>
+
+    <div class="db-sidebar-user">
+      <div class="db-sidebar-avatar">{{ user.full_name[0] | upper }}</div>
+      <div>
+        <div class="db-sidebar-user-name">{{ user.full_name }}</div>
+        <div class="db-sidebar-user-status">Active</div>
+      </div>
+    </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="db-main">
-    
+  <!-- ==============================
+       MAIN CONTENT
+       ============================== -->
+  <div class="db-main">
+
     <!-- Topbar -->
-    <header class="db-header">
-      <div class="db-header-left">
-        <h1>Welcome back, {{ user.full_name.split(' ')[0] }}! 👋</h1>
-        <p>Here's an overview of your FASTag account today.</p>
+    <div class="db-topbar">
+      <div>
+        <div class="db-topbar-title">Welcome back, {{ user.full_name.split(' ')[0] }} 👋</div>
+        <div class="db-topbar-sub">Here's an overview of your FASTag account today.</div>
       </div>
-      <div class="db-header-right">
-        <div class="db-date">
-          <span>📅</span> {{ now|default('Wed, 3 Jun 2026') }}
+      <div class="db-topbar-right">
+        <div class="db-date-chip">
+          📅 &nbsp;
+          <script>document.write(new Date().toLocaleDateString('en-IN', {weekday:'short', year:'numeric', month:'short', day:'numeric'}));</script>
         </div>
-        <button class="upi-autopay-btn">
-          <span>⚡</span> Set UPI AutoPay
-        </button>
-        <div class="user-profile">
-          <div class="user-avatar">{{ user.full_name[0] | upper }}</div>
-          <div class="user-info">
-            <span class="user-name">{{ user.full_name.split(' ')[0] }}</span>
-            <span class="user-status">Active</span>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- Overview section: Financials + Profile -->
-    <div class="overview-grid">
-      
-      <!-- Financial Cards (2x2) -->
-      <div class="finance-cards">
-        <div class="finance-card fc-balance">
-          <div class="fc-header">
-            <div class="fc-label">Wallet Balance</div>
-            <div class="fc-icon">💳</div>
-          </div>
-          <div class="fc-value"><span>₹</span>{{ stats.wallet_balance }}</div>
-        </div>
-        
-        <div class="finance-card fc-deposit">
-          <div class="fc-header">
-            <div class="fc-label">Security Deposit</div>
-            <div class="fc-icon">🛡️</div>
-          </div>
-          <div class="fc-value"><span>₹</span>{{ stats.security_deposit }}</div>
-        </div>
-        
-        <div class="finance-card fc-monthly">
-          <div class="fc-header">
-            <div class="fc-label">Monthly Limit</div>
-            <div class="fc-icon">📈</div>
-          </div>
-          <div class="fc-value"><span>₹</span>{{ stats.monthly_limit }}</div>
-        </div>
-        
-        <div class="finance-card fc-threshold">
-          <div class="fc-header">
-            <div class="fc-label">Threshold Limit</div>
-            <div class="fc-icon">📉</div>
-          </div>
-          <div class="fc-value"><span>₹</span>{{ stats.threshold_limit }}</div>
-        </div>
-      </div>
-
-      <!-- Quick Profile Card -->
-      <div class="profile-details-card">
-        <h3>Account Details</h3>
-        <div class="detail-row">
-          <div class="detail-icon">👤</div>
-          <div class="detail-info">
-            <span class="detail-label">Full Name</span>
-            <span class="detail-value">{{ user.full_name }}</span>
-          </div>
-        </div>
-        <div class="detail-row">
-          <div class="detail-icon">📱</div>
-          <div class="detail-info">
-            <span class="detail-label">Mobile Number</span>
-            <span class="detail-value">+91 {{ user.phone }}</span>
-          </div>
-        </div>
-        <div class="detail-row">
-          <div class="detail-icon">✉️</div>
-          <div class="detail-info">
-            <span class="detail-label">Email Address</span>
-            <span class="detail-value">{{ user.email }}</span>
-          </div>
-        </div>
-        <div class="detail-row">
-          <div class="detail-icon">🏷️</div>
-          <div class="detail-info">
-            <span class="detail-label">Total Tags</span>
-            <span class="detail-value">{{ stats.no_of_tags }} Registered</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Vehicle Info Section -->
-    <div class="vehicle-section">
-      <div class="vehicle-header">
-        <h2><span>🚘</span> Registered Vehicles</h2>
-        <div class="vehicle-actions">
-          <div class="search-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-box" placeholder="Search vehicles or tags..." />
-          </div>
-          <button class="btn-action" style="color: #047857; border-color: #a7f3d0;">
-            <span>📥</span> Export CSV
-          </button>
-        </div>
-      </div>
-      
-      <div class="table-container">
-        <table class="vehicle-table">
-          <thead>
-            <tr>
-              <th>Vehicle Number</th>
-              <th>Tag ID</th>
-              <th>Vehicle Class</th>
-              <th>Commercial</th>
-              <th>Status</th>
-              <th>Annual Pass</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for v in vehicles %}
-            <tr>
-              <td><span class="plate-badge">{{ v.vehicle_number }}</span></td>
-              <td style="font-family: monospace; color: var(--db-text-muted);">{{ v.tag_id or 'Processing...' }}</td>
-              <td>{{ v.vehicle_class }}</td>
-              <td>
-                <span style="color: {{ '#10b981' if v.is_commercial else '#94a3b8' }}; font-weight: 700;">
-                  {{ 'YES' if v.is_commercial else 'NO' }}
-                </span>
-              </td>
-              <td>
-                {% if v.status == 'Active' %}
-                  <span class="status-pill status-active">Active</span>
-                {% else %}
-                  <span class="status-pill status-pending">{{ v.status }}</span>
-                {% endif %}
-              </td>
-              <td class="pass-icon">{{ '✅' if v.has_annual_pass else '🚫' }}</td>
-            </tr>
-            {% else %}
-            <tr>
-              <td colspan="6" style="text-align: center; color: var(--db-text-muted); padding: 60px 20px;">
-                <div style="font-size: 32px; margin-bottom: 12px;">🚗</div>
-                <div style="font-weight: 600;">No vehicles found.</div>
-                <div style="font-size: 13px;">Add a FASTag to see your vehicles here.</div>
-              </td>
-            </tr>
-            {% endfor %}
-            
-            <!-- Mocked rows for empty state demo purposes -->
-            {% if not vehicles %}
-            <tr>
-              <td><span class="plate-badge">TN07YU8934</span></td>
-              <td style="font-family: monospace; color: var(--db-text-muted);">34161FA8203289B60200A9E0</td>
-              <td>Car/Jeep/Van(VC4)</td>
-              <td><span style="color: #94a3b8; font-weight: 700;">NO</span></td>
-              <td><span class="status-pill status-active">Active</span></td>
-              <td class="pass-icon">🚫</td>
-            </tr>
-            <tr>
-              <td><span class="plate-badge">MH12DE1433</span></td>
-              <td style="font-family: monospace; color: var(--db-text-muted);">Processing...</td>
-              <td>Light Commercial(VC20)</td>
-              <td><span style="color: #10b981; font-weight: 700;">YES</span></td>
-              <td><span class="status-pill status-pending">Pending</span></td>
-              <td class="pass-icon">✅</td>
-            </tr>
-            {% endif %}
-          </tbody>
-        </table>
+        <button class="upi-btn">⚡ Set UPI AutoPay</button>
       </div>
     </div>
-  </main>
-</div>
+
+    <!-- Content -->
+    <div class="db-content">
+
+      <!-- Stat Cards -->
+      <div class="stat-row">
+        <div class="stat-card stat-card-g1">
+          <div class="stat-card-top">
+            <div class="stat-card-label">Wallet Balance</div>
+            <div class="stat-card-icon">💳</div>
+          </div>
+          <div class="stat-card-value">
+            <span class="stat-card-value-prefix">₹</span>{{ stats.wallet_balance }}
+          </div>
+        </div>
+        <div class="stat-card stat-card-g2">
+          <div class="stat-card-top">
+            <div class="stat-card-label">Security Deposit</div>
+            <div class="stat-card-icon">🛡️</div>
+          </div>
+          <div class="stat-card-value">
+            <span class="stat-card-value-prefix">₹</span>{{ stats.security_deposit }}
+          </div>
+        </div>
+        <div class="stat-card stat-card-g3">
+          <div class="stat-card-top">
+            <div class="stat-card-label">Monthly Limit</div>
+            <div class="stat-card-icon">📈</div>
+          </div>
+          <div class="stat-card-value">
+            <span class="stat-card-value-prefix">₹</span>{{ stats.monthly_limit }}
+          </div>
+        </div>
+        <div class="stat-card stat-card-g4">
+          <div class="stat-card-top">
+            <div class="stat-card-label">Threshold Limit</div>
+            <div class="stat-card-icon">📉</div>
+          </div>
+          <div class="stat-card-value">
+            <span class="stat-card-value-prefix">₹</span>{{ stats.threshold_limit }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Row -->
+      <div class="info-row">
+
+        <!-- Account Details -->
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-title">
+              <div class="db-card-title-icon">👤</div>
+              Account Details
+            </div>
+          </div>
+          <div class="db-card-body" style="padding: 8px 20px 16px;">
+            <div class="account-row">
+              <div class="account-row-icon">👤</div>
+              <div>
+                <div class="account-row-label">Full Name</div>
+                <div class="account-row-value">{{ user.full_name }}</div>
+              </div>
+            </div>
+            <div class="account-row">
+              <div class="account-row-icon">📱</div>
+              <div>
+                <div class="account-row-label">Mobile Number</div>
+                <div class="account-row-value">+91 {{ user.phone }}</div>
+              </div>
+            </div>
+            <div class="account-row">
+              <div class="account-row-icon">✉️</div>
+              <div>
+                <div class="account-row-label">Email Address</div>
+                <div class="account-row-value">{{ user.email }}</div>
+              </div>
+            </div>
+            <div class="account-row">
+              <div class="account-row-icon">🔒</div>
+              <div>
+                <div class="account-row-label">Account Status</div>
+                <div class="account-row-value" style="color: var(--c-green);">● Verified &amp; Active</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags Summary -->
+        <div class="db-card">
+          <div class="db-card-header">
+            <div class="db-card-title">
+              <div class="db-card-title-icon">🏷️</div>
+              FASTag Summary
+            </div>
+          </div>
+          <div class="tags-card-body">
+            <div class="tags-big-number">{{ stats.no_of_tags }}</div>
+            <div>
+              <div class="tags-desc" style="font-weight: 600; font-size: 15px; color: var(--c-text-primary);">Registered Tags</div>
+              <div class="tags-desc" style="font-size: 13px; margin-top: 4px;">Tags linked to your FASTag account across all vehicles.</div>
+              <span class="tags-badge-pill">All tags active</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Vehicles Table -->
+      <div class="db-card">
+        <div class="db-card-header">
+          <div class="db-card-title">
+            <div class="db-card-title-icon">🚘</div>
+            Registered Vehicles
+          </div>
+          <div class="table-actions">
+            <div class="table-search">
+              🔍
+              <input type="text" id="vehicle-search" placeholder="Search vehicles..." />
+            </div>
+            <button class="table-btn">📥 Export</button>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="vehicles-table">
+            <thead>
+              <tr>
+                <th>Vehicle Number</th>
+                <th>Tag ID</th>
+                <th>Vehicle Class</th>
+                <th>Commercial</th>
+                <th>Status</th>
+                <th>Annual Pass</th>
+              </tr>
+            </thead>
+            <tbody id="vehicle-tbody">
+              {% for v in vehicles %}
+              <tr>
+                <td><span class="vrn-tag">{{ v.vehicle_number }}</span></td>
+                <td><span class="tag-id-text">{{ v.tag_id or '—' }}</span></td>
+                <td>{{ v.vehicle_class }}</td>
+                <td>
+                  {% if v.is_commercial %}
+                    <span style="color: var(--c-green); font-weight: 700; font-size: 12px;">✔ YES</span>
+                  {% else %}
+                    <span style="color: var(--c-text-muted); font-weight: 600; font-size: 12px;">NO</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if v.status == 'Active' %}
+                    <span class="status-pill s-active">Active</span>
+                  {% else %}
+                    <span class="status-pill s-pending">{{ v.status }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if v.has_annual_pass %}
+                    <span class="pass-chip pass-yes">✔ Yes</span>
+                  {% else %}
+                    <span class="pass-chip pass-no">No</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <!-- Demo rows when no vehicles in DB -->
+              <tr>
+                <td><span class="vrn-tag">TN07YU8934</span></td>
+                <td><span class="tag-id-text">34161FA8203289B60200A9E0</span></td>
+                <td>Car / Jeep / Van (VC4)</td>
+                <td><span style="color: var(--c-text-muted); font-weight: 600; font-size: 12px;">NO</span></td>
+                <td><span class="status-pill s-active">Active</span></td>
+                <td><span class="pass-chip pass-no">No</span></td>
+              </tr>
+              <tr>
+                <td><span class="vrn-tag">MH12DE1433</span></td>
+                <td><span class="tag-id-text">Processing...</span></td>
+                <td>Light Commercial (VC20)</td>
+                <td><span style="color: var(--c-green); font-weight: 700; font-size: 12px;">✔ YES</span></td>
+                <td><span class="status-pill s-pending">Pending</span></td>
+                <td><span class="pass-chip pass-yes">✔ Yes</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /db-content -->
+  </div><!-- /db-main -->
+</div><!-- /db-layout -->
+
+<script>
+  // Live vehicle search
+  const searchInput = document.getElementById('vehicle-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('#vehicle-tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  }
+</script>
 {% endblock %}
