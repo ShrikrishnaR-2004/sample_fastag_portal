@@ -17,7 +17,7 @@
 <body>
 
   <header class="site-header" role="banner">
-    <a href="{{ url_for('main.dashboard') if current_user.is_authenticated else url_for('main.login') }}" class="nav-brand" aria-label="FASTag Portal home">
+    <a href="{{ url_for('main.dashboard') if current_user.is_authenticated else url_for('main.index') }}" class="nav-brand" aria-label="FASTag Portal home">
       <span class="fastag-badge" aria-hidden="true">FASTag</span>
       <div>
         <div class="nav-brand-text">FASTag Portal</div>
@@ -25,7 +25,7 @@
       </div>
     </a>
     <nav class="header-right" aria-label="Header navigation">
-      <a href="#" class="header-help">Help &amp; Support</a>
+      <a href="https://www.netc.org.in/faq" class="header-help">Help &amp; Support</a>
     </nav>
   </header>
 
